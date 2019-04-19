@@ -1,0 +1,8 @@
+# Binaries files
+bin/
+
+# Object files
+objects/
+
+# VSCode
+.vscode/
