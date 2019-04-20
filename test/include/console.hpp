@@ -4,17 +4,17 @@
 #include <iostream>
 
 namespace console {
-    static const char* BOLD = "\e[1m";
+    #define BOLD "\x1B[1m"
     
-    static const char* GREEN = "\e[32m";
-    static const char* GREEN_DARK = "\e[38;2;0;145;0m";
+    #define GREEN "\x1B[32m"
+    #define GREEN_DARK "\x1B[38;2;0;145;0m"
 
-    static const char* RED = "\e[34m";
-    static const char* RED_DARK = "\e[38;2;195;0;0m";
+    #define RED "\x1B[34m"
+    #define RED_DARK "\x1B[38;2;195;0;0m"
 
-    static const char* CLEAR = "\e[0m";
+    #define CLEAR "\x1B[0m"
 
-    static const char* SPACE = " ";
+    #define SPACE " "
 
     static void print(const char* message);
     

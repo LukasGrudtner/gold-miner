@@ -18,7 +18,8 @@ CXX_FLAGS=-c        \
           -Wall     \
           -ansi     \
           -pedantic \
-          -g
+          -g        \
+          -std=c++11
 
 # Command used at clean target
 RM = rm -rf
@@ -26,12 +27,12 @@ RM = rm -rf
 #
 # Compilation and linking
 #
-all: objFolder binFolder $(PROJ_NAME)
+all: create_folders $(PROJ_NAME)
 
 # $^ expands to all target prerequisites
 $(PROJ_NAME): $(OBJ)
 	@ echo "Building target using G++ compiler: $<"
-	$(CXX) $^ -o ./bin/$@
+	@ $(CXX) $^ -o ./bin/$@
 	@ echo "Finished building binary: $@"
 	@ echo " "
 
@@ -39,23 +40,44 @@ $(PROJ_NAME): $(OBJ)
 # $< get the first prerequisite's name
 ./objects/%.o: ./src/%.cpp ./include/%.h
 	@ echo "Bulding target using G++ compiler: $<"
-	$(CXX) $< $(CXX_FLAGS) -o $@
+	@ $(CXX) $< $(CXX_FLAGS) -o $@
 	@ echo " "
 
 ./objects/main.o: ./src/main.cpp $(H_SRC)
 	@ echo "Bulding target using G++ compiler: $<"
-	$(CXX) $< $(CXX_FLAGS) -o $@
+	@ $(CXX) $< $(CXX_FLAGS) -o $@
 	@ echo " "
 
-objFolder:
-	@ mkdir -p objects
-
-binFolder:
-	@ mkdir -p bin
-
 clean:
-	@ $(RM) ./objects/*.o ./bin/* $(PROJ_NAME) *~
+	@ $(RM) ./objects/*.o ./bin/* ./test/objects/*.o ./test/bin/* $(PROJ_NAME) *~
 	@ rmdir objects
 	@ rmdir bin
+	@ rmdir test/objects
+	@ rmdir test/bin
 
-.PHONY: all clean
+########## TESTS ##########
+
+# .cpp test files
+CXX_TEST_SRC=$(wildcard ./test/src/*.cpp)
+
+# Test object files
+OBJ_TEST=$(subst .cpp,.o,$(subst test/src,test/objects,$(CXX_TEST_SRC)))
+
+# Test object files
+./test/objects/%.o: ./test/src/%.cpp $(H_SRC)
+	@ $(CXX) $< $(CXX_FLAGS) -o $@
+
+# Run all tests
+test: create_folders run_tests
+
+run_tests: $(OBJ) $(OBJ_TEST) 
+	@ $(CXX) $^ -o ./test/bin/test
+	@./test/bin/test
+
+create_folders:
+	@ mkdir -p bin
+	@ mkdir -p objects
+	@ mkdir -p test/bin
+	@ mkdir -p test/objects
+
+.PHONY: all clean test

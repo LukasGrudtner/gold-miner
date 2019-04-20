@@ -1,8 +1,10 @@
 # Binaries files
 bin/
+test/bin
 
 # Object files
 objects/
+test/objects
 
 # VSCode
 .vscode/

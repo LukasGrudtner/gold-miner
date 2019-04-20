@@ -2,7 +2,7 @@
 #define __MINE_H__
 
 #include <vector>
-#include "include/room.h"
+#include "room.h"
 
 class Mine
 {

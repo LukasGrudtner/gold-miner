@@ -1,4 +1,4 @@
-#include "include/miner.h"
+#include "../include/miner.h"
 
 Miner::Miner(const Room* position, unsigned int mine_size)
 {
@@ -71,7 +71,7 @@ bool Miner::buy_battery()
 
 bool Miner::move(const Room* next_room)
 {
-    if (next_room->goal == Room::FENCE)
+    if (next_room->goal() == Room::FENCE)
         return false;
 
     if (this->_battery || buy_battery())
@@ -80,7 +80,7 @@ bool Miner::move(const Room* next_room)
         --(this->_battery);
     }
 
-    if (this->_position->goal == Room::GOLD)
+    if (this->_position->goal() == Room::GOLD)
         pick_gold();
     
     return true;

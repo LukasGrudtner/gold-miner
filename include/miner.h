@@ -3,8 +3,8 @@
 
 #include <math.h>
 
-#include "include/mine.h"
-#include "include/room.h"
+#include "mine.h"
+#include "room.h"
 
 #define BATTERY_POWER 1.5
 
