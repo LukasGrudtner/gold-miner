@@ -1,4 +1,4 @@
-PROJ_NAME=goldmine
+PROJ_NAME=goldminer
 
 # .cpp files
 CXX_SRC=$(wildcard ./src/*.cpp)

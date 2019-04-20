@@ -1,10 +1,7 @@
 #ifndef __MINE_H__
 #define __MINE_H__
 
-#include <vector>
 #include "include/room.h"
-
-using std::vector;
 
 class Mine
 {

@@ -7,6 +7,8 @@
 class Miner
 {
 public:
+    Miner(const Mine& position);
+
     /* Methods to guide the miner inside the mine. */
     bool left();
     bool right();
@@ -16,9 +18,6 @@ public:
     /* Miner picks up the gold when possibile. */
     bool pickup();
 
-    /* Enters the mine. */
-    void enters(const Mine& mine) const;
-
     /* Attribute getter's. */
     unsigned int battery() const;
     unsigned int saved_gold() const;
@@ -26,7 +25,7 @@ public:
 private:
     unsigned int _battery;
     unsigned int _saved_gold;
-    Room* location;
+    Room* position;
 };
 
 #endif

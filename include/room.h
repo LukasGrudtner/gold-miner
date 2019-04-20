@@ -22,10 +22,10 @@ public:
 private:
     Goal _goal;
 
-    Room* left;
-    Room* right;
-    Room* forward;
-    Room* back;
+    Room* _left;
+    Room* _right;
+    Room* _forward;
+    Room* _back;
 };
 
 #endif
