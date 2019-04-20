@@ -1,12 +1,13 @@
 #ifndef __MINER_H__
 #define __MINER_H__
 
-#include "include/mine.h";
+#include "include/mine.h"
 #include "include/room.h"
 
 class Miner
 {
 public:
+    /* Inits the miner in the mine's entrance. */
     Miner(const Mine& position);
 
     /* Methods to guide the miner inside the mine. */
@@ -23,8 +24,11 @@ public:
     unsigned int saved_gold() const;
 
 private:
+    /* Personal attributes of the miner. */
     unsigned int _battery;
     unsigned int _saved_gold;
+
+    /* Current position inside the mine. */
     Room* position;
 };
 
