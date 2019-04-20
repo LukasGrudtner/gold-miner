@@ -3,6 +3,9 @@
 
 class Room
 {
+    
+
+public:
     typedef unsigned char Goal;
 
     /* What the miner can find running through the rooms. */
@@ -10,9 +13,8 @@ class Room
     static const Goal FENCE   = 0x01;
     static const Goal GOLD    = 0x02;
 
-    friend Mine;
-
 public:
+    Room();
     Room(Goal goal);
 
     /* Possible paths and its rooms. */
@@ -23,7 +25,9 @@ public:
 
     Goal goal() const;
 
-private:
+public:
+    friend class Mine;
+
     /* Room setter's for Mine class use. */
     void set_left(Room* left);
     void set_right(Room* right);

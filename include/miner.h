@@ -1,14 +1,18 @@
 #ifndef __MINER_H__
 #define __MINER_H__
 
+#include <math.h>
+
 #include "include/mine.h"
 #include "include/room.h"
+
+#define BATTERY_POWER 1.5
 
 class Miner
 {
 public:
     /* Inits the miner in the mine's entrance. */
-    Miner(const Mine& position);
+    Miner(const Room* position, unsigned int mine_size);
 
     /* Methods to guide the miner inside the mine. */
     bool left();
@@ -16,20 +20,26 @@ public:
     bool forward();
     bool back();
 
-    /* Miner picks up the gold when possibile. */
-    bool pickup();
-
     /* Attribute getter's. */
     unsigned int battery() const;
-    unsigned int saved_gold() const;
+    unsigned int gold() const;
+
+private:
+    bool move(const Room* next_room);
+
+    /* Miner picks up the gold when possibile. */
+    void pick_gold();
+
+    bool buy_battery();
 
 private:
     /* Personal attributes of the miner. */
-    unsigned int _battery;
-    unsigned int _saved_gold;
+    unsigned int _battery   = 0;
+    unsigned int _gold      = 0;
+    unsigned int _mine_size = 0;
 
     /* Current position inside the mine. */
-    Room* position;
+    const Room* _position = nullptr;
 };
 
 #endif

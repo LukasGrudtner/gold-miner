@@ -1,4 +1,6 @@
-#include "../include/room.h"
+#include "include/room.h"
+
+Room::Room() {}
 
 Room::Room(Goal goal)
 {
