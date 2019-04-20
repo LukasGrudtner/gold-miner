@@ -17,13 +17,17 @@ Mine MineBuilder::build()
 
     /* Read mine's size. */
     file >> mine_size;
+    std::cout << "Mine size: " << mine_size << std::endl;
+
+    unsigned int counter = mine_size*mine_size;
 
     /* While the file doesn't end, build the room's vector. */
-    while (!file.eof())
+    while (counter--)
     {
         file >> goal;
         Room room = build_room(goal);
         rooms.push_back(room);
+        std::cout << counter << ": " << goal << std::endl;
     }
 
     /* Close file. */

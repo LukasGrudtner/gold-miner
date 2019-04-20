@@ -50,10 +50,10 @@ $(PROJ_NAME): $(OBJ)
 
 clean:
 	@ $(RM) ./objects/*.o ./bin/* ./test/objects/*.o ./test/bin/* $(PROJ_NAME) *~
-	@ rmdir objects
-	@ rmdir bin
-	@ rmdir test/objects
-	@ rmdir test/bin
+	@ rmdir --ignore-fail-on-non-empty objects
+	@ rmdir --ignore-fail-on-non-empty bin
+	@ rmdir --ignore-fail-on-non-empty test/objects
+	@ rmdir --ignore-fail-on-non-empty test/bin
 
 ########## TESTS ##########
 
@@ -63,16 +63,24 @@ CXX_TEST_SRC=$(wildcard ./test/src/*.cpp)
 # Test object files
 OBJ_TEST=$(subst .cpp,.o,$(subst test/src,test/objects,$(CXX_TEST_SRC)))
 
+# .hpp test files
+HPP_TEST_SRC=$(wildcard ./test/include/*.hpp)
+
 # Test object files
-./test/objects/%.o: ./test/src/%.cpp $(H_SRC)
+./test/objects/%.o: ./test/src/%.cpp $(H_SRC) $(HPP_TEST_SRC)
 	@ $(CXX) $< $(CXX_FLAGS) -o $@
 
 # Run all tests
-test: create_folders run_tests
+test: run_tests
 
 run_tests: $(OBJ) $(OBJ_TEST) 
 	@ $(CXX) $^ -o ./test/bin/test
-	@./test/bin/test
+	./test/bin/test
+
+test-debug: $(OBJ) $(OBJ_TEST) 
+	@ $(CXX) $^ -o ./test/bin/test
+	gdb test/bin/test
+	
 
 create_folders:
 	@ mkdir -p bin

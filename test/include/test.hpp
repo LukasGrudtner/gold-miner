@@ -30,6 +30,8 @@ private:
 private:
     bool result = true;
     int curr_assert = 0;
+
+    
 };
 
 void Test::clear()

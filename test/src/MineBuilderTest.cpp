@@ -1,6 +1,3 @@
-#ifndef __MINE_BUILDER_TEST_CPP__
-#define __MINE_BUILDER_TEST_CPP__
-
 #include "../../include/mine_builder.h"
 #include "../include/test.hpp"
 
@@ -10,12 +7,15 @@ class MineBuilderTest
 {
     
 public:
-    static void BUILDER()
+    void BUILDER()
     {
         MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
         const Room* room = mine.entrance();
+        test.ASSERT_EQ(room->goal() == Room::FREEWAY);
+
+        room = room->right();
         test.ASSERT_EQ(room->goal() == Room::FREEWAY);
 
         test.evaluate("MINE_BUILDER :: entrance()");
@@ -25,9 +25,10 @@ public:
     {
         BUILDER();
     }
-
 };
 
-
-
-#endif
+int main()
+{
+    MineBuilderTest mineBuilder;
+    mineBuilder.run();
+}
