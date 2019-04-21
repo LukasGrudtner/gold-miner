@@ -1,7 +1,6 @@
 #ifndef __MINE_H__
 #define __MINE_H__
 
-#include <vector>
 #include "room.h"
 
 /**
@@ -27,21 +26,18 @@ public:
     unsigned int size() const;
 
 private:
-    void add_room(const Room& room);
-
     void draw_paths(Room* room, unsigned int index);
 
-    bool case1(unsigned int index);
-    bool case2(unsigned int index);
-    bool case3(unsigned int index);
-    bool case4(unsigned int index);
+    bool case_first_line    (unsigned int index);
+    bool case_first_column  (unsigned int index);
+    bool case_last_line     (unsigned int index);
+    bool case_last_column   (unsigned int index);
 
 private:
     /* Size of the mine. */
     unsigned int _size;
 
     /* Array with all the rooms of the mine. */
-    // std::vector<Room> _rooms;
     Room* _rooms;
 };
 

@@ -18,13 +18,13 @@ public:
     Room(Goal goal);
 
     /* Possible paths and its rooms. */
-    Room* left()      const;
-    Room* right()     const;
-    Room* up()        const;
-    Room* down()      const;
+    Room* left()    const;
+    Room* right()   const;
+    Room* up()      const;
+    Room* down()    const;
+    Goal goal()     const;
     bool pick_gold();
 
-    Goal goal() const;
 
 public:
     friend class Mine;
