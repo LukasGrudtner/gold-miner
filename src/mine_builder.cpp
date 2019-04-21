@@ -15,6 +15,7 @@ Mine MineBuilder::build()
     /* Open file. */
     file.open(this->_filepath);
 
+
     /* Read mine's size. */
     file >> mine_size;
     rooms = new Room[mine_size*mine_size];

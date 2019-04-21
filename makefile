@@ -88,4 +88,15 @@ create_folders:
 	@ mkdir -p test/bin
 	@ mkdir -p test/objects
 
+########## MINE GENERATOR ##########
+
+%:
+	@:
+
+args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
+
+generate:
+	@ g++ -o generator/generate generator/generator.cpp generator/mine_generator.cpp
+	@ ./generator/generate $(call args,defaultstring)
+
 .PHONY: all clean test
