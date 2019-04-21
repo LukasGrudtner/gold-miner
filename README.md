@@ -18,3 +18,9 @@ $ make test
 ```sh
 $ make test-debug
 ```
+
+### Generating a mine
+
+```sh
+$ make generate [mine's name] [mine's size]
+```
