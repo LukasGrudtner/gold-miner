@@ -18,10 +18,11 @@ public:
     Room(Goal goal);
 
     /* Possible paths and its rooms. */
-    const Room* left()      const;
-    const Room* right()     const;
-    const Room* forward()   const;
-    const Room* back()      const;
+    Room* left()      const;
+    Room* right()     const;
+    Room* up()        const;
+    Room* down()      const;
+    bool pick_gold();
 
     Goal goal() const;
 
@@ -31,8 +32,8 @@ public:
     /* Room setter's for Mine class use. */
     void set_left(Room* left);
     void set_right(Room* right);
-    void set_forward(Room* forward);
-    void set_back(Room* back);
+    void set_up(Room* up);
+    void set_down(Room* down);
 
 private:
     Goal _goal;
@@ -40,8 +41,8 @@ private:
     /* Pointers to adjacent rooms. */
     Room* _left     = nullptr;
     Room* _right    = nullptr;
-    Room* _forward  = nullptr;
-    Room* _back     = nullptr;
+    Room* _up  = nullptr;
+    Room* _down     = nullptr;
 };
 
 #endif

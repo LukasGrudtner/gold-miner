@@ -9,7 +9,7 @@ Mine MineBuilder::build()
 {
     std::string goal;
     std::ifstream file;
-    std::vector<Room> rooms;
+    Room* rooms;
     unsigned int mine_size = 0;
 
     /* Open file. */
@@ -17,7 +17,7 @@ Mine MineBuilder::build()
 
     /* Read mine's size. */
     file >> mine_size;
-    std::cout << "Mine size: " << mine_size << std::endl;
+    rooms = new Room[mine_size*mine_size];
 
     unsigned int counter = mine_size*mine_size;
 
@@ -26,8 +26,7 @@ Mine MineBuilder::build()
     {
         file >> goal;
         Room room = build_room(goal);
-        rooms.push_back(room);
-        std::cout << counter << ": " << goal << std::endl;
+        rooms[(mine_size*mine_size)-counter-1] = room;
     }
 
     /* Close file. */

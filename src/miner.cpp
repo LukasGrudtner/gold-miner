@@ -1,6 +1,6 @@
 #include "../include/miner.h"
 
-Miner::Miner(const Room* position, unsigned int mine_size)
+Miner::Miner(Room* position, unsigned int mine_size)
 {
     this->_position = position;
     this->_mine_size = mine_size;
@@ -9,7 +9,7 @@ Miner::Miner(const Room* position, unsigned int mine_size)
 
 bool Miner::left()
 {
-    const Room* next_room = this->_position->left();
+    Room* next_room = this->_position->left();
     if (next_room != nullptr)
         return move(next_room);
 
@@ -18,26 +18,26 @@ bool Miner::left()
 
 bool Miner::right()
 {
-    const Room* next_room = this->_position->right();
+    Room* next_room = this->_position->right();
     if (this->_position->right() != nullptr)
         return move(next_room);
 
     return false;
 }
 
-bool Miner::forward()
+bool Miner::up()
 {
-    const Room* next_room = this->_position->forward();
-    if (this->_position->forward() != nullptr)
+    Room* next_room = this->_position->up();
+    if (this->_position->up() != nullptr)
         return move(next_room);
 
     return false;
 }
 
-bool Miner::back()
+bool Miner::down()
 {
-    const Room* next_room = this->_position->back();
-    if (this->_position->back() != nullptr)
+    Room* next_room = this->_position->down();
+    if (this->_position->down() != nullptr)
         return move(next_room);
 
     return false;
@@ -69,7 +69,7 @@ bool Miner::buy_battery()
     return false;
 }
 
-bool Miner::move(const Room* next_room)
+bool Miner::move(Room* next_room)
 {
     if (next_room->goal() == Room::FENCE)
         return false;
@@ -81,7 +81,7 @@ bool Miner::move(const Room* next_room)
     }
 
     if (this->_position->goal() == Room::GOLD)
-        pick_gold();
+        _gold += this->_position->pick_gold();
     
     return true;
 }

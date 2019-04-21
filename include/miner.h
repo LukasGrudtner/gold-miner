@@ -12,20 +12,20 @@ class Miner
 {
 public:
     /* Inits the miner in the mine's entrance. */
-    Miner(const Room* position, unsigned int mine_size);
+    Miner(Room* position, unsigned int mine_size);
 
     /* Methods to guide the miner inside the mine. */
     bool left();
     bool right();
-    bool forward();
-    bool back();
+    bool up();
+    bool down();
 
     /* Attribute getter's. */
     unsigned int battery() const;
     unsigned int gold() const;
 
 private:
-    bool move(const Room* next_room);
+    bool move(Room* next_room);
 
     /* Miner picks up the gold when possibile. */
     void pick_gold();
@@ -39,7 +39,7 @@ private:
     unsigned int _mine_size = 0;
 
     /* Current position inside the mine. */
-    const Room* _position = nullptr;
+    Room* _position = nullptr;
 };
 
 #endif

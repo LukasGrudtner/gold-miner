@@ -71,15 +71,15 @@ HPP_TEST_SRC=$(wildcard ./test/include/*.hpp)
 	@ $(CXX) $< $(CXX_FLAGS) -o $@
 
 # Run all tests
-test: run_tests
+test: create_folders run_tests
 
 run_tests: $(OBJ) $(OBJ_TEST) 
 	@ $(CXX) $^ -o ./test/bin/test
-	./test/bin/test
+	@./test/bin/test
 
 test-debug: $(OBJ) $(OBJ_TEST) 
 	@ $(CXX) $^ -o ./test/bin/test
-	gdb test/bin/test
+	@gdb test/bin/test
 	
 
 create_folders:

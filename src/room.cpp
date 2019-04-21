@@ -7,24 +7,34 @@ Room::Room(Goal goal)
     this->_goal = goal;
 }
 
-const Room* Room::left() const
+Room* Room::left() const
 {
     return this->_left;
 }
 
-const Room* Room::right() const
+Room* Room::right() const
 {
     return this->_right;
 }
 
-const Room* Room::forward() const
+Room* Room::up() const
 {
-    return this->_forward;
+    return this->_up;
 }
 
-const Room* Room::back() const
+Room* Room::down() const
 {
-    return this->_back;
+    return this->_down;
+}
+
+bool Room::pick_gold()
+{
+    if (this->_goal == Room::GOLD)
+    {
+        this->_goal = Room::FREEWAY;
+        return true;
+    }
+    return false;
 }
 
 Room::Goal Room::goal() const
@@ -42,12 +52,12 @@ void Room::set_right(Room* right)
     this->_right = right;
 }
 
-void Room::set_forward(Room* forward)
+void Room::set_up(Room* up)
 {
-    this->_forward = forward;
+    this->_up = up;
 }
 
-void Room::set_back(Room* back)
+void Room::set_down(Room* down)
 {
-    this->_back = back;
+    this->_down = down;
 }

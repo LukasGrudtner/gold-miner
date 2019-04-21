@@ -5,10 +5,10 @@
 #include "room.h"
 
 /**
- * [12][13][14][15]
- * [08][09][10][11]
- * [04][05][06][07]
  * [00][01][02][03]
+ * [04][05][06][07]
+ * [08][09][10][11]
+ * [12][13][14][15]
  * 
  * Mine with 4x4 = 16 rooms.
  * Entrance = room 00.
@@ -18,10 +18,13 @@ class Mine
 {
 public:
     /* Inits the mine with its size (n x n). */
-    Mine(const std::vector<Room>& rooms, unsigned int size);
+    Mine(Room* rooms, unsigned int size);
 
     /* Return the first room. */
-    const Room* entrance() const;
+    Room* entrance() const;
+
+    /* Return mine's size. */
+    unsigned int size() const;
 
 private:
     void add_room(const Room& room);
@@ -38,7 +41,8 @@ private:
     unsigned int _size;
 
     /* Array with all the rooms of the mine. */
-    std::vector<Room> _rooms;
+    // std::vector<Room> _rooms;
+    Room* _rooms;
 };
 
 #endif
