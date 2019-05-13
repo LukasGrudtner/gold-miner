@@ -7,40 +7,45 @@ Miner::Miner(Room* position, unsigned int mine_size)
     this->_battery = pow(mine_size, BATTERY_POWER);
 }
 
-bool Miner::left()
+const Room* Miner::left()
 {
-    Room* next_room = this->_position->left();
-    if (next_room != nullptr)
+    Room* next_room = _position->left();
+    if (next_room)
         return move(next_room);
 
-    return false;
+    return nullptr;
 }
 
-bool Miner::right()
+const Room* Miner::right()
 {
-    Room* next_room = this->_position->right();
-    if (this->_position->right() != nullptr)
+    Room* next_room = _position->right();
+    if (next_room)
         return move(next_room);
 
-    return false;
+    return nullptr;
 }
 
-bool Miner::up()
+const Room* Miner::up()
 {
-    Room* next_room = this->_position->up();
-    if (this->_position->up() != nullptr)
+    Room* next_room = _position->up();
+    if (next_room)
         return move(next_room);
 
-    return false;
+    return nullptr;
 }
 
-bool Miner::down()
+const Room* Miner::down()
 {
-    Room* next_room = this->_position->down();
-    if (this->_position->down() != nullptr)
+    Room* next_room = _position->down();
+    if (next_room)
         return move(next_room);
 
-    return false;
+    return nullptr;
+}
+
+const Room* Miner::position() const
+{
+    return this->_position;
 }
 
 unsigned int Miner::battery() const
@@ -53,35 +58,76 @@ unsigned int Miner::gold() const
     return this->_gold;
 }
 
-void Miner::pick_gold()
+bool Miner::pick_gold()
 {
-    ++(this->_gold);
-}
-
-bool Miner::buy_battery()
-{
-    if (this->_gold)
+    if (_position->pick_gold())
     {
-        --(this->_gold);
-        this->_battery += 5 * pow(_mine_size, BATTERY_POWER);
+        ++_gold;
         return true;
     }
     return false;
 }
 
-bool Miner::move(Room* next_room)
+bool Miner::buy_battery()
+{
+    if (_gold)
+    {
+        --_gold;
+        _battery += 5 * pow(_mine_size, BATTERY_POWER);
+        return true;
+    }
+    return false;
+}
+
+Room* Miner::move(Room* next_room)
 {
     if (next_room->goal() == Room::FENCE)
-        return false;
+        return nullptr;
 
-    if (this->_battery || buy_battery())
+    if (_battery || buy_battery())
     {
-        this->_position = next_room;
-        --(this->_battery);
+        _position = next_room;
+        --_battery;
     }
-
-    if (this->_position->goal() == Room::GOLD)
-        _gold += this->_position->pick_gold();
     
-    return true;
+    return next_room;
+}
+
+const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
+{
+    State initial_state = State(_position, _battery, 0);
+    Problem problem = Problem(initial_state);
+
+    std::stack<State::Action>* actions = new std::stack<State::Action>();
+
+    const State state = dfs_limited(curl, maxl, problem.initial_state(), problem, actions);
+
+    return state;
+}   
+
+const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, const State& state, const Problem& problem, std::stack<State::Action>* actions)
+{
+    if (problem.goal(state))
+        return state;
+
+    if (curl+1 == maxl)
+        return state;
+    else
+    {
+        actions->push(state.action());
+        _explored_rooms++;
+
+        for (const State s : problem.successors(state))
+        {
+            const State result = dfs_limited(curl+1, maxl, s, problem, actions);
+            if (problem.goal(result))
+                return result;
+        }
+    }
+    return state;
+}
+
+unsigned int Miner::explored_rooms() const
+{
+    return _explored_rooms;
 }

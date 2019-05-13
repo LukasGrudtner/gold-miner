@@ -25,6 +25,8 @@ public:
     Goal goal()     const;
     bool pick_gold();
 
+    bool operator==(const Room& room) const;
+
 
 public:
     friend class Mine;

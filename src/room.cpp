@@ -61,3 +61,12 @@ void Room::set_down(Room* down)
 {
     this->_down = down;
 }
+
+bool Room::operator==(const Room& room) const
+{
+    return (this->_goal == room.goal()  &&
+            this->_left == room._left   &&
+            this->_right == room._right &&
+            this->_up == room._up       &&
+            this->_down == room._down);
+}
