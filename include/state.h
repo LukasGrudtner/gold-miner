@@ -24,6 +24,8 @@ public:
     unsigned int gold() const;
     Action action() const;
 
+    std::string to_string() const;
+
 private:
     const Room*     _position = nullptr;
     unsigned int    _battery = 0;

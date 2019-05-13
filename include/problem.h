@@ -2,7 +2,9 @@
 #define __PROBLEM_H__
 
 #include <list>
+#include <vector>
 #include "state.h"
+#include <algorithm>
 
 class Problem
 {

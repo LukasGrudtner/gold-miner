@@ -6,8 +6,6 @@
 #include <string>
 #include "room.h"
 
-#define LEFT "E"
-
 class Result
 {
 public:

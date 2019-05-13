@@ -36,3 +36,10 @@ State::Action State::action() const
 {
     return _action;
 }
+
+std::string State::to_string() const
+{
+    return std::to_string((long unsigned int) _position) + 
+            std::to_string(_battery) +
+            std::to_string(_gold);
+}

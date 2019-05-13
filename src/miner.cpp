@@ -94,34 +94,65 @@ Room* Miner::move(Room* next_room)
     return next_room;
 }
 
+#include <iostream>
 const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
 {
-    
+    std::list<State::Action> actions;
+    std::unordered_map<std::string, bool> explored;
 
-    std::stack<State::Action>* actions = new std::stack<State::Action>();
+    const State state = dfs_limited(curl, maxl, _problem.initial_state(), _problem, actions, explored);
 
-    const State state = dfs_limited(curl, maxl, _problem.initial_state(), _problem, actions);
+    std::cout << "buckets: " << explored.bucket_count() << std::endl;
+    std::cout << "max buckets: " << explored.max_bucket_count() << std::endl;
+
+    std::cout << "actions size: " << actions.size() << std::endl;
+
+    std::string act;
+    for (State::Action action : actions)
+    {
+
+        if (action == State::LEFT)
+            act += "E -> ";
+        else if (action == State::RIGHT)
+            act += "D -> ";
+        else if (action == State::DOWN)
+            act += "B -> ";
+        else if (action == State::UP)
+            act += "C -> ";
+    }
+
+    std::cout << act << std::endl;
 
     return state;
 }   
 
-const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, const State& state, const Problem& problem, std::stack<State::Action>* actions)
+const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, const State& state, const Problem& problem, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
     if (problem.goal(state))
+    {
+        actions.push_front(state.action());
         return state;
+    }
 
     if (curl+1 == maxl)
         return state;
     else
     {
-        actions->push(state.action());
+        explored[state.to_string()] = true;
+
         _explored_rooms++;
 
         for (const State s : problem.successors(state))
         {
-            const State result = dfs_limited(curl+1, maxl, s, problem, actions);
-            if (problem.goal(result))
-                return result;
+            if (!explored[s.to_string()])
+            {
+                const State result = dfs_limited(curl+1, maxl, s, problem, actions, explored);
+                if (problem.goal(result))
+                {
+                    actions.push_front(state.action());
+                    return result;
+                }
+            }
         }
     }
     return state;

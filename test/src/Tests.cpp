@@ -171,11 +171,12 @@ private:
     void DFS_LIMITED_SEARCH()
     {
         MineBuilder builder = MineBuilder("input/generated/teste.mine");
+        // MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
         Miner miner = Miner(mine.entrance(), mine.size());
 
-        const State result = miner.dfs_limited(0, 200);
+        const State result = miner.dfs_limited(0, 1000);
 
         std::cout << "Initial battery: " << miner.battery() << std::endl;
         std::cout << "Remaining battery: " << result.battery() << std::endl;
