@@ -35,6 +35,8 @@ public:
 
     bool visited(const Room* room);
 
+    bool goal_state(const State& state) const;
+
     unsigned int explored_rooms() const;
 
     const State dfs_limited(const unsigned int curl, const unsigned int maxl);
@@ -60,6 +62,8 @@ private:
     Room* _position = nullptr;
 
     unsigned int _explored_rooms = 0;
+
+    Problem _problem;
 };
 
 #endif

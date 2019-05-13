@@ -180,7 +180,7 @@ private:
         std::cout << "Initial battery: " << miner.battery() << std::endl;
         std::cout << "Remaining battery: " << result.battery() << std::endl;
         std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
-        // std::cout << "Goal: " << miner.dfs_limited(0, 200) << std::endl;
+        std::cout << "Goal: " << miner.goal_state(result) << std::endl;
     }
 };
 

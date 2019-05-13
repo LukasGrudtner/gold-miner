@@ -1,5 +1,7 @@
 #include "../include/problem.h"
 
+Problem::Problem() {}
+
 Problem::Problem(const State& initial_state)
 {
     this->_initial_state = initial_state;

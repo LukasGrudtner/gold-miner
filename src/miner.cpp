@@ -5,6 +5,7 @@ Miner::Miner(Room* position, unsigned int mine_size)
     this->_position = position;
     this->_mine_size = mine_size;
     this->_battery = pow(mine_size, BATTERY_POWER);
+    this->_problem = Problem(State(_position, _battery, 0));
 }
 
 const Room* Miner::left()
@@ -95,12 +96,11 @@ Room* Miner::move(Room* next_room)
 
 const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
 {
-    State initial_state = State(_position, _battery, 0);
-    Problem problem = Problem(initial_state);
+    
 
     std::stack<State::Action>* actions = new std::stack<State::Action>();
 
-    const State state = dfs_limited(curl, maxl, problem.initial_state(), problem, actions);
+    const State state = dfs_limited(curl, maxl, _problem.initial_state(), _problem, actions);
 
     return state;
 }   
@@ -130,4 +130,9 @@ const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl,
 unsigned int Miner::explored_rooms() const
 {
     return _explored_rooms;
+}
+
+bool Miner::goal_state(const State& state) const
+{
+    return _problem.goal(state);
 }

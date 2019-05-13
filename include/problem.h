@@ -7,6 +7,7 @@
 class Problem
 {
 public:
+    Problem();
     Problem(const State& initial_state);
 
     /* Return a list of successors states for a given state. */
