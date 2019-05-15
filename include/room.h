@@ -5,42 +5,34 @@
 
 class Room
 {
-    
-
 public:
-    typedef unsigned char Goal;
 
-    /* What the miner can find running through the rooms. */
-    static const Goal FREEWAY = 0x00;
-    static const Goal FENCE   = 0x01;
-    static const Goal GOLD    = 0x02;
-
-    std::string coordenada()
-    {
-        return this->_coordenadas;
-    }
-
-    void coordenadas(std::string coord)
-    {
-        this->_coordenadas = coord;
-    }
+    /* Type definition of a Codition, the state of the room that the miner can find. */
+    typedef unsigned char Condition;
+    static const Condition FREE = (1 << 0);
+    static const Condition FENCE   = (1 << 1);
+    static const Condition GOLD    = (1 << 2);
 
 public:
     Room();
-    Room(Goal goal);
+    Room(Condition condition);
 
     /* Possible paths and its rooms. */
-    Room* left()    const;
-    Room* right()   const;
-    Room* up()      const;
-    Room* down()    const;
-    Goal goal()     const;
+    Room* left()            const;
+    Room* right()           const;
+    Room* up()              const;
+    Room* down()            const;
     bool pick_gold();
 
-    
+    /* Condition of the room. */
+    Condition condition()   const;
 
+    /* Coordinates setters. */
+    std::string coordinates() { return this->_coordinates; }
+    void coordinates(std::string coord) { this->_coordinates = coord; }
+
+    /* Overcharge equal operator. */
     bool operator==(const Room& room) const;
-
 
 public:
     friend class Mine;
@@ -52,15 +44,16 @@ public:
     void set_down(Room* down);
 
 private:
-    Goal _goal;
+    Condition _condition;
 
     /* Pointers to adjacent rooms. */
     Room* _left     = nullptr;
     Room* _right    = nullptr;
-    Room* _up  = nullptr;
+    Room* _up       = nullptr;
     Room* _down     = nullptr;
 
-    std::string _coordenadas;
+    /* Just to facilitate the debug. */
+    std::string _coordinates;
 };
 
 #endif

@@ -26,8 +26,10 @@ public:
     unsigned int size() const;
 
 private:
+    /* Draw the paths inside the mine, linking them with pointers. */
     void draw_paths(Room* room, unsigned int index);
 
+    /* Treats the cases of the rooms at the edge of the mine. */
     bool case_first_line    (unsigned int index);
     bool case_first_column  (unsigned int index);
     bool case_last_line     (unsigned int index);

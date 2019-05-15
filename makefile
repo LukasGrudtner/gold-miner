@@ -13,13 +13,14 @@ OBJ=$(subst .cpp,.o,$(subst src,objects,$(CXX_SRC)))
 CXX=g++
 
 # Flags for compiler
-CXX_FLAGS=-c        \
-          -W        \
-          -Wall     \
-          -ansi     \
-          -pedantic \
-          -g        \
-          -std=c++11
+CXX_FLAGS=-c         \
+          -W         \
+          -Wall      \
+          -ansi      \
+          -pedantic  \
+          -g         \
+          -std=c++11 \
+          -std=c++1z
 
 # Command used at clean target
 RM = rm -rf

@@ -5,7 +5,6 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-
 #include "mine.h"
 
 class MineBuilder
@@ -15,7 +14,7 @@ public:
     Mine build();
 
 private:
-    Room build_room(std::string goal);
+    Room build_room(std::string condition);
 
 private:
     std::string _filepath;

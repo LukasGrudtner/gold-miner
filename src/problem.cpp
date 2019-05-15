@@ -8,11 +8,6 @@ Problem::Problem(unsigned int problem_size, State initial_state)
     this->_initial_state = initial_state;
 }
 
-int myrandom(int i)
-{
-    return std::rand()%i;
-}
-
 std::list<const State> Problem::successors(State& state)
 {
     std::list<const State> successors;
@@ -21,65 +16,70 @@ std::list<const State> Problem::successors(State& state)
 
     const Room* position = state.position();
 
-    std::list<const Room*> mined = state.mined_list();
-    // auto [battery, gold, action] = handle_attributes(state.battery(), state.gold(), position, mined);
-
-    // if (battery)
+    std::list<const Room*> mined = state.mined_rooms();
     {
-        if (position->down() && position->down()->goal() != Room::FENCE)
+        /* Build down successor. */
+        if (position->down() && position->down()->condition() != Room::FENCE)
         {
             State down = build_state(state, position->down(), State::DOWN);
 
-            down._coord = position->down()->coordenada();
-            aux.push_back(down.to_string());
+            down.coordinates() = position->down()->coordinates();
+            aux.push_back(down.hash());
             aux_state.push_back(down);
             successors.push_back(down);
         }
 
-        if (position->right() && position->right()->goal() != Room::FENCE)
+        /* Build right successor. */
+        if (position->right() && position->right()->condition() != Room::FENCE)
         {   
             State right = build_state(state, position->right(), State::RIGHT);
 
-            right._coord = position->right()->coordenada();
-            aux.push_back(right.to_string());
+            right.coordinates() = position->right()->coordinates();
+            aux.push_back(right.hash());
             aux_state.push_back(right);
             successors.push_back(right);
         }
 
-        if (position->left() && position->left()->goal() != Room::FENCE)
+        /* Build left successor. */
+        if (position->left() && position->left()->condition() != Room::FENCE)
         {
             State left = build_state(state, position->left(), State::LEFT);
 
-            left._coord = position->left()->coordenada();
-            aux.push_back(left.to_string());
+            left.coordinates() = position->left()->coordinates();
+            aux.push_back(left.hash());
             aux_state.push_back(left);
             successors.push_back(left);
         }
         
-        if (position->up() && position->up()->goal() != Room::FENCE)
+        /* Build up successor. */
+        if (position->up() && position->up()->condition() != Room::FENCE)
         {
             State up = build_state(state, position->up(), State::UP);
             
-            up._coord = position->up()->coordenada();
-            aux.push_back(up.to_string());
+            up.coordinates() = position->up()->coordinates();
+            aux.push_back(up.hash());
             aux_state.push_back(up);
             successors.push_back(up);
         }
 
-        // srand(time(NULL));
-        // std::random_shuffle(aux.begin(), aux.end());
+        /* Shuffles successors order. */
+#ifdef RANDOM_SUCCESSORS_CHOICE
+        srand(time(NULL));
+        std::random_shuffle(aux.begin(), aux.end());
+        successors.clear();
 
-        // for (std::string str : aux)
-        // {
-        //     for (const State state : aux_state)
-        //     {
-        //         if (state.to_string() == str)
-        //         {
-        //             successors.push_back(state);
-        //             break;
-        //         }
-        //     }   
-        // }
+        for (std::string str : aux)
+        {
+            for (const State state : aux_state)
+            {
+                if (state.hash() == str)
+                {
+                    successors.push_back(state);
+                    break;
+                }
+            }   
+        }
+#endif
             
     }
     return successors;
@@ -87,8 +87,7 @@ std::list<const State> Problem::successors(State& state)
 
 bool Problem::goal(const State& state) const
 {
-    // return state.gold() == _problem_size/2;
-    return state.gold() >= 2;
+    return state.gold() == _problem_size/2;
 }
 
 unsigned int Problem::path_cost() const
@@ -101,12 +100,12 @@ State& Problem::initial_state()
     return this->_initial_state;
 }
 
-std::tuple<unsigned int, unsigned int, State::Action> Problem::handle_attributes(unsigned int battery, unsigned int gold, const Room* position, std::list<const Room*>& mined)
+Problem::Attributes Problem::handle_attributes(unsigned int battery, unsigned int gold, const Room* position, std::list<const Room*>& mined)
 {
     unsigned int _battery = battery, _gold = gold;
     State::Action _action = 0;
 
-    if (position->goal() == Room::GOLD && std::find(mined.begin(), mined.end(), position) == mined.end())
+    if (position->condition() == Room::GOLD && std::find(mined.begin(), mined.end(), position) == mined.end())
     {
         _gold++;
         _action = State::PICK_GOLD;
@@ -133,8 +132,8 @@ std::tuple<unsigned int, unsigned int, State::Action> Problem::handle_attributes
 
 State Problem::build_state(State& father, Room* new_position, State::Action action)
 {
-    std::list<const Room*> _mined = father.mined_list();
+    std::list<const Room*> _mined = father.mined_rooms();
     auto [_battery, _gold, _action] = handle_attributes(father.battery(), father.gold(), new_position, _mined);
 
-    return State(new_position, action | _action, _battery, _gold, _mined);
+    return State(new_position, _battery, _gold, action | _action, _mined);
 }

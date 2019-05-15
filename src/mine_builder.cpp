@@ -15,7 +15,6 @@ Mine MineBuilder::build()
     /* Open file. */
     file.open(this->_filepath);
 
-
     /* Read mine's size. */
     file >> mine_size;
     rooms = new Room[mine_size*mine_size];
@@ -30,10 +29,8 @@ Mine MineBuilder::build()
         file >> goal;
         Room room = build_room(goal);
 
-        
-
         std::string coord = "[" + std::to_string(x) + "," + std::to_string(y) + "]";
-        room.coordenadas(coord);
+        room.coordinates(coord);
 
         y++;
 
@@ -44,8 +41,6 @@ Mine MineBuilder::build()
         }
 
         rooms[(mine_size*mine_size)-counter-1] = room;
-
-        // std::cout << room.coordenadas() << std::endl;
     }
 
     /* Close file. */
@@ -54,12 +49,12 @@ Mine MineBuilder::build()
     return Mine(rooms, mine_size);
 }
 
-Room MineBuilder::build_room(std::string goal)
+Room MineBuilder::build_room(std::string condition)
 {
     Room room;
-    if (goal == "0")
-        room = Room(Room::FREEWAY);
-    else if (goal == "1")
+    if (condition == "0")
+        room = Room(Room::FREE);
+    else if (condition == "1")
         room = Room(Room::FENCE);
     else
         room = Room(Room::GOLD);

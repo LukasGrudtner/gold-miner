@@ -2,9 +2,9 @@
 
 Room::Room() {}
 
-Room::Room(Goal goal)
+Room::Room(Condition condition)
 {
-    this->_goal = goal;
+    this->_condition = condition;
 }
 
 Room* Room::left() const
@@ -29,17 +29,17 @@ Room* Room::down() const
 
 bool Room::pick_gold()
 {
-    if (this->_goal == Room::GOLD)
+    if (this->_condition == Room::GOLD)
     {
-        this->_goal = Room::FREEWAY;
+        this->_condition = Room::FREE;
         return true;
     }
     return false;
 }
 
-Room::Goal Room::goal() const
+Room::Condition Room::condition() const
 {
-    return this->_goal;
+    return this->_condition;
 }
 
 void Room::set_left(Room* left)
@@ -64,9 +64,9 @@ void Room::set_down(Room* down)
 
 bool Room::operator==(const Room& room) const
 {
-    return (this->_goal == room.goal()  &&
-            this->_left == room._left   &&
-            this->_right == room._right &&
-            this->_up == room._up       &&
-            this->_down == room._down);
+    return (this->_condition    == room._condition      &&
+            this->_left         == room._left           &&
+            this->_right        == room._right          &&
+            this->_up           == room._up             &&
+            this->_down         == room._down);
 }
