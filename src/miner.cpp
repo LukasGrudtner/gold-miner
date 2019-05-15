@@ -141,7 +141,6 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
                 if (_problem.goal(result))
                 {
                     actions.push_front(state.action());
-                    std::cout << std::to_string(state.action()) << state._coord << std::endl;
                     return result;
                 }          
                 // std::cout << " <- ";      
@@ -177,23 +176,23 @@ Miner::Answer Miner::dfs_iterative(const unsigned int iterations)
 
 std::string Miner::actions_str(std::list<State::Action> actions) const
 {
-    std::string act;
-    for (auto it = actions.begin(); it != std::prev(actions.end()); it++)
+    std::string str;
+    for (auto action = actions.begin(); action != actions.end(); action++)
     {
-        if (*it & State::PICK_GOLD)
-            act += "PO -> ";
+        if      (*action & State::RIGHT) str += "D -> ";
+        else if (*action & State::LEFT)  str += "E -> ";
+        else if (*action & State::DOWN)  str += "B -> ";
+        else if (*action & State:: UP)   str += "C -> ";
 
-        if (*it & State::LEFT)
-            act += "E -> ";
-        else if (*it & State::RIGHT)
-            act += "D -> ";
-        else if (*it & State::DOWN)
-            act += "B -> ";
-        else if (*it & State::UP)
-            act += "C -> ";
+        if (*action & State::PICK_GOLD)
+        {
+            str += "PO"; 
+            if (action != actions.begin() && action != std::prev(actions.end()))
+                str += " -> ";
+        } 
+
+        
+            
     }
-    if (actions.back() & State::PICK_GOLD)
-        act += "PO";
-
-    return act;
+    return str;
 }

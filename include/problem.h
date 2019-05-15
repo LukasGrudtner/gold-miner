@@ -32,6 +32,8 @@ public:
 
     std::tuple<unsigned int, unsigned int, State::Action> handle_attributes(unsigned int battery, unsigned int gold, const Room* position, std::list<const Room*>& mined);
 
+    State build_state(State& father, Room* new_position, State::Action action);
+
 private:
     State _initial_state;
     unsigned int _problem_size;

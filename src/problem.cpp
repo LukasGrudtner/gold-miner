@@ -22,13 +22,13 @@ std::list<const State> Problem::successors(State& state)
     const Room* position = state.position();
 
     std::list<const Room*> mined = state.mined_list();
-    auto [battery, gold, action] = handle_attributes(state.battery(), state.gold(), position, mined);
+    // auto [battery, gold, action] = handle_attributes(state.battery(), state.gold(), position, mined);
 
-    if (battery)
+    // if (battery)
     {
         if (position->down() && position->down()->goal() != Room::FENCE)
         {
-            State down = State(position->down(), action | State::DOWN, battery-path_cost(), gold, mined);
+            State down = build_state(state, position->down(), State::DOWN);
 
             down._coord = position->down()->coordenada();
             aux.push_back(down.to_string());
@@ -38,7 +38,7 @@ std::list<const State> Problem::successors(State& state)
 
         if (position->right() && position->right()->goal() != Room::FENCE)
         {   
-            State right = State(position->right(), action | State::RIGHT, battery-path_cost(), gold, mined);
+            State right = build_state(state, position->right(), State::RIGHT);
 
             right._coord = position->right()->coordenada();
             aux.push_back(right.to_string());
@@ -48,8 +48,7 @@ std::list<const State> Problem::successors(State& state)
 
         if (position->left() && position->left()->goal() != Room::FENCE)
         {
-
-            State left = State(position->left(), action | State::LEFT, battery-path_cost(), gold, mined);
+            State left = build_state(state, position->left(), State::LEFT);
 
             left._coord = position->left()->coordenada();
             aux.push_back(left.to_string());
@@ -59,7 +58,7 @@ std::list<const State> Problem::successors(State& state)
         
         if (position->up() && position->up()->goal() != Room::FENCE)
         {
-            State up = State(position->up(), action | State::UP, battery-path_cost(), gold, mined);
+            State up = build_state(state, position->up(), State::UP);
             
             up._coord = position->up()->coordenada();
             aux.push_back(up.to_string());
@@ -119,7 +118,6 @@ std::tuple<unsigned int, unsigned int, State::Action> Problem::handle_attributes
         if (_gold)
         {
             _battery += 5 * pow(_problem_size, BATTERY_POWER);
-            // _battery += 6;
             _gold--;
 
             return {_battery, _gold, _action};
@@ -128,5 +126,15 @@ std::tuple<unsigned int, unsigned int, State::Action> Problem::handle_attributes
         return {0, 0, _action};
     }
 
+    _battery -= path_cost();
+
     return {_battery, _gold, _action};
+}
+
+State Problem::build_state(State& father, Room* new_position, State::Action action)
+{
+    std::list<const Room*> _mined = father.mined_list();
+    auto [_battery, _gold, _action] = handle_attributes(father.battery(), father.gold(), new_position, _mined);
+
+    return State(new_position, action | _action, _battery, _gold, _mined);
 }
