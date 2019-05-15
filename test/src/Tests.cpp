@@ -181,14 +181,14 @@ private:
 
         std::cout << result << std::endl;
 
-        if (result && miner.goal_state(state))
-        {
-            std::cout << "Initial battery: " << miner.battery() << std::endl;
-            std::cout << "Remaining battery: " << state.battery() << std::endl;
-            std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
-            std::cout << "Goal: " << miner.goal_state(state) << std::endl;
-            std::cout << "Picked gold: " << state.gold() << std::endl;
-        }
+        std::cout << "Result: " << result << std::endl;
+        std::cout << "Initial battery: " << miner.battery() << std::endl;
+        std::cout << "Remaining battery: " << state.battery() << std::endl;
+        std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
+        std::cout << "Picked gold: " << state.gold() << std::endl;
+        std::cout << "Actions Number: " << actions.size() << std::endl;
+        std::cout << "Actions: " << miner.actions_str(actions) << std::endl;
+
 
         
     }

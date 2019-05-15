@@ -43,6 +43,8 @@ public:
 
     unsigned int explored_rooms() const;
 
+    std::string actions_str(std::list<State::Action> actions) const;
+
     Answer dfs_limited(const unsigned int curl, const unsigned int maxl);
     Answer dfs_iterative(const unsigned int iterations);
 

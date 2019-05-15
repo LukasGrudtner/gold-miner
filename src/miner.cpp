@@ -107,31 +107,6 @@ Miner::Answer Miner::dfs_limited(const unsigned int curl, const unsigned int max
 
     if (_problem.goal(state))
     {
-        std::cout << "buckets: " << explored.bucket_count() << std::endl;
-        std::cout << "max buckets: " << explored.max_bucket_count() << std::endl;
-
-        std::cout << "actions size: " << actions.size() << std::endl;
-
-        std::string act;
-        for (auto it = actions.begin(); it != std::prev(actions.end()); it++)
-        {
-            if (*it & State::PICK_GOLD)
-                act += "PO -> ";
-
-            if (*it & State::LEFT)
-                act += "E -> ";
-            else if (*it & State::RIGHT)
-                act += "D -> ";
-            else if (*it & State::DOWN)
-                act += "B -> ";
-            else if (*it & State::UP)
-                act += "C -> ";
-        }
-        if (actions.back() & State::PICK_GOLD)
-            act += "PO";
-
-        std::cout << act << std::endl;
-
         return {true, state, actions};
     }
 
@@ -198,4 +173,27 @@ Miner::Answer Miner::dfs_iterative(const unsigned int iterations)
             return {result, state, actions};
     }
     return {false, State(), std::list<State::Action>()};
+}
+
+std::string Miner::actions_str(std::list<State::Action> actions) const
+{
+    std::string act;
+    for (auto it = actions.begin(); it != std::prev(actions.end()); it++)
+    {
+        if (*it & State::PICK_GOLD)
+            act += "PO -> ";
+
+        if (*it & State::LEFT)
+            act += "E -> ";
+        else if (*it & State::RIGHT)
+            act += "D -> ";
+        else if (*it & State::DOWN)
+            act += "B -> ";
+        else if (*it & State::UP)
+            act += "C -> ";
+    }
+    if (actions.back() & State::PICK_GOLD)
+        act += "PO";
+
+    return act;
 }
