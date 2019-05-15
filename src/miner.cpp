@@ -5,7 +5,8 @@ Miner::Miner(Room* position, unsigned int mine_size)
     this->_position = position;
     this->_mine_size = mine_size;
     this->_battery = pow(mine_size, BATTERY_POWER);
-    this->_problem = Problem(State(_position, _battery, 0));
+    // this->_battery = 8;
+    this->_problem = Problem(mine_size, State(_position, _battery, 0));
 }
 
 const Room* Miner::left()
@@ -95,46 +96,60 @@ Room* Miner::move(Room* next_room)
 }
 
 #include <iostream>
-const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
+Miner::Answer Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
 {
     std::list<State::Action> actions;
     std::unordered_map<std::string, bool> explored;
+    std::list<const Room*> mined;
+    
 
-    const State state = dfs_limited(curl, maxl, _problem.initial_state(), _problem, actions, explored);
+    State state = dfs_limited(curl, maxl, _problem.initial_state(), actions, explored);
 
-    std::cout << "buckets: " << explored.bucket_count() << std::endl;
-    std::cout << "max buckets: " << explored.max_bucket_count() << std::endl;
-
-    std::cout << "actions size: " << actions.size() << std::endl;
-
-    std::string act;
-    for (State::Action action : actions)
+    if (_problem.goal(state))
     {
+        std::cout << "buckets: " << explored.bucket_count() << std::endl;
+        std::cout << "max buckets: " << explored.max_bucket_count() << std::endl;
 
-        if (action == State::LEFT)
-            act += "E -> ";
-        else if (action == State::RIGHT)
-            act += "D -> ";
-        else if (action == State::DOWN)
-            act += "B -> ";
-        else if (action == State::UP)
-            act += "C -> ";
+        std::cout << "actions size: " << actions.size() << std::endl;
+
+        std::string act;
+        for (auto it = actions.begin(); it != std::prev(actions.end()); it++)
+        {
+            if (*it & State::PICK_GOLD)
+                act += "PO -> ";
+
+            if (*it & State::LEFT)
+                act += "E -> ";
+            else if (*it & State::RIGHT)
+                act += "D -> ";
+            else if (*it & State::DOWN)
+                act += "B -> ";
+            else if (*it & State::UP)
+                act += "C -> ";
+        }
+        if (actions.back() & State::PICK_GOLD)
+            act += "PO";
+
+        std::cout << act << std::endl;
+
+        return {true, state, actions};
     }
 
-    std::cout << act << std::endl;
-
-    return state;
+    return {false, state, actions};
 }   
 
-const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, const State& state, const Problem& problem, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
+State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
-    if (problem.goal(state))
+    // std::cout << state.position()->coordenada() << "(b:" << state.battery() << ", g:" << state.gold() << ")" << " -> "
+
+    if (_problem.goal(state))
     {
         actions.push_front(state.action());
+        std::cout << std::to_string(state.action()) << state._coord << std::endl;
         return state;
     }
 
-    if (curl+1 == maxl)
+    if (curl == maxl)
         return state;
     else
     {
@@ -142,19 +157,25 @@ const State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl,
 
         _explored_rooms++;
 
-        for (const State s : problem.successors(state))
+        for (State s : _problem.successors(state))
         {
             if (!explored[s.to_string()])
             {
-                const State result = dfs_limited(curl+1, maxl, s, problem, actions, explored);
-                if (problem.goal(result))
+                State result = dfs_limited(curl+1, maxl, s, actions, explored);
+
+                if (_problem.goal(result))
                 {
                     actions.push_front(state.action());
+                    std::cout << std::to_string(state.action()) << state._coord << std::endl;
                     return result;
-                }
+                }          
+                // std::cout << " <- ";      
             }
         }
     }
+
+    
+
     return state;
 }
 
@@ -166,4 +187,15 @@ unsigned int Miner::explored_rooms() const
 bool Miner::goal_state(const State& state) const
 {
     return _problem.goal(state);
+}
+
+Miner::Answer Miner::dfs_iterative(const unsigned int iterations)
+{
+    for (int i = 0; i <= iterations; i++)
+    {
+        auto [result, state, actions] = dfs_limited(0, i+1);
+        if (result && _problem.goal(state))
+            return {result, state, actions};
+    }
+    return {false, State(), std::list<State::Action>()};
 }

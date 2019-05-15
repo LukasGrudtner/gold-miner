@@ -99,8 +99,8 @@ class MinerTest
 public:
     void run()
     {
-        MINING();
-        EXPLORED();
+        // MINING();
+        // EXPLORED();
         DFS_LIMITED_SEARCH();
     }
 
@@ -170,24 +170,33 @@ private:
 
     void DFS_LIMITED_SEARCH()
     {
-        MineBuilder builder = MineBuilder("input/generated/teste.mine");
-        // MineBuilder builder = MineBuilder("input/mine.txt");
+        // MineBuilder builder = MineBuilder("input/generated/teste.mine");
+        MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
         Miner miner = Miner(mine.entrance(), mine.size());
 
-        const State result = miner.dfs_limited(0, 1000);
+        auto [result, state, actions] = miner.dfs_limited(0, 10000);
+        // auto [result, state, actions] = miner.dfs_iterative(100);
 
-        std::cout << "Initial battery: " << miner.battery() << std::endl;
-        std::cout << "Remaining battery: " << result.battery() << std::endl;
-        std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
-        std::cout << "Goal: " << miner.goal_state(result) << std::endl;
+        std::cout << result << std::endl;
+
+        if (result && miner.goal_state(state))
+        {
+            std::cout << "Initial battery: " << miner.battery() << std::endl;
+            std::cout << "Remaining battery: " << state.battery() << std::endl;
+            std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
+            std::cout << "Goal: " << miner.goal_state(state) << std::endl;
+            std::cout << "Picked gold: " << state.gold() << std::endl;
+        }
+
+        
     }
 };
 
 int main()
 {
-    RoomTest().run();
-    MineBuilderTest().run();
+    // RoomTest().run();
+    // MineBuilderTest().run();
     MinerTest().run();
 }

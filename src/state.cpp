@@ -2,22 +2,23 @@
 
 State::State() {}
 
-State::State(const Room* position, unsigned int battery, unsigned int gold)
+State::State(Room* position, unsigned int battery, unsigned int gold)
 {
     this->_position = position;
     this->_battery = battery;
     this->_gold = gold;
 }
 
-State::State(const Room* position, Action action, unsigned int battery, unsigned int gold)
+State::State(Room* position, Action action, unsigned int battery, unsigned int gold, std::list<const Room*> mined)
 {
     this->_position = position;
     this->_battery = battery;
     this->_gold = gold;
     this->_action = action;
+    this->_mined = mined;
 }
 
-const Room* State::position() const
+Room* State::position()
 {
     return _position;
 }
@@ -39,8 +40,24 @@ State::Action State::action() const
 
 std::string State::to_string() const
 {
-    // return std::to_string((long unsigned int) _position) + 
-    //         std::to_string(_battery) +
-    //         std::to_string(_gold);
-    return std::to_string((long unsigned int) _position);
+    std::string explored_states;
+    for (const Room* explored : _mined)
+        explored_states += std::to_string((long unsigned int) explored);
+
+    return std::to_string((long unsigned int) _position) + 
+            std::to_string(_battery) +
+            std::to_string(_gold) +
+            explored_states;
+    // return std::to_string((long unsigned int) _position);
+}
+
+void State::merge_list(std::list<const Room*> mined)
+{
+    for (const Room* room : mined)
+        _mined.push_back(room);
+}
+
+std::list<const Room*> State::mined_list()
+{
+    return _mined;
 }

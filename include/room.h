@@ -1,6 +1,8 @@
 #ifndef __ROOM_H__
 #define __ROOM_H__
 
+#include <string>
+
 class Room
 {
     
@@ -13,6 +15,16 @@ public:
     static const Goal FENCE   = 0x01;
     static const Goal GOLD    = 0x02;
 
+    std::string coordenada()
+    {
+        return this->_coordenadas;
+    }
+
+    void coordenadas(std::string coord)
+    {
+        this->_coordenadas = coord;
+    }
+
 public:
     Room();
     Room(Goal goal);
@@ -24,6 +36,8 @@ public:
     Room* down()    const;
     Goal goal()     const;
     bool pick_gold();
+
+    
 
     bool operator==(const Room& room) const;
 
@@ -45,6 +59,8 @@ private:
     Room* _right    = nullptr;
     Room* _up  = nullptr;
     Room* _down     = nullptr;
+
+    std::string _coordenadas;
 };
 
 #endif

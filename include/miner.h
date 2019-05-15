@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <deque>
 
 #include "mine.h"
 #include "room.h"
@@ -14,10 +15,12 @@
 #include "result.h"
 #include "problem.h"
 
-#define BATTERY_POWER 1.5
+
 
 class Miner
 {
+public:
+    typedef std::tuple<bool, const State, std::list<State::Action>> Answer;
 public:
     /* Inits the miner in the mine's entrance. */
     Miner(Room* position, unsigned int mine_size);
@@ -40,10 +43,11 @@ public:
 
     unsigned int explored_rooms() const;
 
-    const State dfs_limited(const unsigned int curl, const unsigned int maxl);
+    Answer dfs_limited(const unsigned int curl, const unsigned int maxl);
+    Answer dfs_iterative(const unsigned int iterations);
 
 private:
-    const State dfs_limited(const unsigned int curl, const unsigned int maxl, const State& state, const Problem& problem, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored);
+    State dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored);
     Room* move(Room* next_room);
 
     /* Miner picks up the gold when possibile. */
