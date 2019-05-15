@@ -12,11 +12,11 @@ public:
 
     typedef unsigned char Action;
 
-    static const Action LEFT        = (1 << 0);
-    static const Action RIGHT       = (1 << 1);
-    static const Action UP          = (1 << 2);
-    static const Action DOWN        = (1 << 3);
-    static const Action PICK_GOLD   = (1 << 4);
+    static const Action LEFT        = (1 << 0); /*  1 */
+    static const Action RIGHT       = (1 << 1); /*  2 */
+    static const Action UP          = (1 << 2); /*  4 */
+    static const Action DOWN        = (1 << 3); /*  8 */
+    static const Action PICK_GOLD   = (1 << 4); /* 16 */
 
     std::string _coord;
 

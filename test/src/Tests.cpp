@@ -176,16 +176,14 @@ private:
 
         Miner miner = Miner(mine.entrance(), mine.size());
 
-        auto [result, state, actions] = miner.dfs_limited(0, 10000);
+        // auto [result, state, actions] = miner.dfs_limited(10000);
         // auto [result, state, actions] = miner.dfs_iterative(100);
-
-        std::cout << result << std::endl;
+        auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, 1000);
 
         std::cout << "Result: " << result << std::endl;
-        std::cout << "Initial battery: " << miner.battery() << std::endl;
-        std::cout << "Remaining battery: " << state.battery() << std::endl;
-        std::cout << "Explored states: " << miner.explored_rooms() << std::endl;
-        std::cout << "Picked gold: " << state.gold() << std::endl;
+        std::cout << "Remaining battery: " << miner.battery() << std::endl;
+        std::cout << "Explored states: " << explored_states << std::endl;
+        std::cout << "Picked gold: " << miner.gold() << std::endl;
         std::cout << "Actions Number: " << actions.size() << std::endl;
         std::cout << "Actions: " << miner.actions_str(actions) << std::endl;
 

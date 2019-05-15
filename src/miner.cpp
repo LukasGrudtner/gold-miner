@@ -96,14 +96,14 @@ Room* Miner::move(Room* next_room)
 }
 
 #include <iostream>
-Miner::Answer Miner::dfs_limited(const unsigned int curl, const unsigned int maxl)
+Miner::Answer Miner::dfs_limited(const unsigned int maxl)
 {
     std::list<State::Action> actions;
     std::unordered_map<std::string, bool> explored;
     std::list<const Room*> mined;
     
 
-    State state = dfs_limited(curl, maxl, _problem.initial_state(), actions, explored);
+    State state = dfs_limited(0, maxl, _problem.initial_state(), actions, explored);
 
     if (_problem.goal(state))
     {
@@ -124,7 +124,7 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
         return state;
     }
 
-    if (curl == maxl)
+    if (curl+1 == maxl)
         return state;
     else
     {
@@ -167,7 +167,7 @@ Miner::Answer Miner::dfs_iterative(const unsigned int iterations)
 {
     for (int i = 0; i <= iterations; i++)
     {
-        auto [result, state, actions] = dfs_limited(0, i+1);
+        auto [result, state, actions] = dfs_limited(i+1);
         if (result && _problem.goal(state))
             return {result, state, actions};
     }
@@ -190,9 +190,42 @@ std::string Miner::actions_str(std::list<State::Action> actions) const
             if (action != actions.begin() && action != std::prev(actions.end()))
                 str += " -> ";
         } 
-
-        
-            
     }
     return str;
+}
+
+Miner::Result Miner::execute(Miner::SearchStrategy strategy, unsigned int parameter)
+{
+    auto [result, state, actions] = search(strategy, parameter);
+
+    explore(actions);
+
+    unsigned int score = 0;
+    unsigned int explored_states = _explored_rooms;
+
+    return {result, score, explored_states, actions};
+}
+
+Miner::Answer Miner::search(SearchStrategy strategy, unsigned int parameter)
+{
+    switch (strategy)
+    {
+    case Miner::DEEP_FIRST_SEARCH_ITERATIVE:
+        return dfs_iterative(parameter);
+    
+    case Miner::DEEP_FIRST_SEARCH_LIMITED:
+        return dfs_limited(parameter);
+    }
+}
+
+void Miner::explore(std::list<State::Action> actions)
+{
+    for (State::Action action : actions)
+    {
+        if      (action & State::LEFT)  left();
+        else if (action & State::RIGHT) right();
+        else if (action & State::UP)    up();
+        else if (action & State::DOWN)  down();
+        if (action & State::PICK_GOLD)  pick_gold();
+    }
 }
