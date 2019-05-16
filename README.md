@@ -7,16 +7,24 @@ This work was done for the discipline of Artificial Intelligence. The goal is to
 
 ## Compiling and Running
 
+### Compiling
+```sh
+$ make
+```
+
 ### Application
-Still working...
+```sh
+$ make run
+```
 
-### Tests
-
+### Testing
 ```sh
 $ make test
 ```
+
+### Debugging tests
 ```sh
-$ make test-debug
+$ make debug
 ```
 
 ### Generating a mine
