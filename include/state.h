@@ -1,9 +1,12 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __STATE_H__
 #define __STATE_H__
 
 #include <list>
 #include <string>
-// #include <math.h>
 #include "room.h"
 
 class State

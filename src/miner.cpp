@@ -143,10 +143,14 @@ void Miner::explore(std::list<State::Action> actions)
     }
 }
 
+inline int factorial(int x) {
+  return (x == 1 ? x : x * factorial(x - 1));
+}
+
 int Miner::score() const
 {
     unsigned int p_dimension = pow(_mine_size,2);
-    return p_dimension*(_battery + _gold) - (_explored_rooms/p_dimension) - 5*_actions_count;
+    return 10*_battery + 50*_gold + (factorial(_mine_size)/_explored_rooms) + (p_dimension/_actions_count);
 }
 
 Miner::Answer Miner::dfs_limited(const unsigned int maxl)

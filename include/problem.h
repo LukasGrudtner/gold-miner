@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __PROBLEM_H__
 #define __PROBLEM_H__
 

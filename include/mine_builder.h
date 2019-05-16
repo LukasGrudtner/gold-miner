@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __MINE_BUILDER_H__
 #define __MINE_BUILDER_H__
 

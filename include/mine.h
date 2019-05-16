@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __MINE_H__
 #define __MINE_H__
 
