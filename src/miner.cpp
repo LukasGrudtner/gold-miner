@@ -40,10 +40,7 @@ Miner::Result Miner::execute(Miner::SearchStrategy strategy, unsigned int parame
     if (result && is_goal_state(state))
         explore(actions);
 
-    unsigned int score = 0;
-    unsigned int explored_states = _explored_rooms;
-
-    return {result, score, explored_states, actions};
+    return {result, score(), _explored_rooms, actions};
 }
 
 const Room* Miner::left()
@@ -141,7 +138,15 @@ void Miner::explore(std::list<State::Action> actions)
         else if (action & State::UP)    up();
         else if (action & State::DOWN)  down();
         if (action & State::PICK_GOLD)  pick_gold();
+
+        ++_actions_count;
     }
+}
+
+int Miner::score() const
+{
+    unsigned int p_dimension = pow(_mine_size,2);
+    return p_dimension*(_battery + _gold) - (_explored_rooms/p_dimension) - 5*_actions_count;
 }
 
 Miner::Answer Miner::dfs_limited(const unsigned int maxl)

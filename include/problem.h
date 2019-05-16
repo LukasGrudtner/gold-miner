@@ -9,7 +9,7 @@
 #include "state.h"
 
 /* Define if the order of the successors will be random or not. */
-#define RANDOM_SUCCESSORS_CHOICE
+// #define RANDOM_SUCCESSORS_CHOICE
 
 /* Define the power of the battery according the problem's size. */
 #define BATTERY_POWER 1.5

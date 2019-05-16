@@ -2,25 +2,27 @@ PROJ_NAME=goldminer
 
 # .cpp files
 CXX_SRC=$(wildcard ./src/*.cpp)
+CXX_SRC_APP=$(wildcard ./app/*.cpp)
 
 # .h files
 H_SRC=$(wildcard ./include/*.h)
+H_SRC_APP=$(wildcard ./app/*.h)
 
 # Object files
 OBJ=$(subst .cpp,.o,$(subst src,objects,$(CXX_SRC)))
+OBJ_APP=$(subst .cpp,.o,$(subst app,objects,$(CXX_SRC_APP)))
 
 # Compiler and linker
 CXX=g++
 
 # Flags for compiler
-CXX_FLAGS=-c         \
-          -W         \
-          -Wall      \
-          -ansi      \
-          -pedantic  \
-          -g         \
-          -std=c++11 \
-          -std=c++1z
+CXX_FLAGS=-c        \
+          -W        \
+          -Wall     \
+          -ansi     \
+          -pedantic \
+          -g        \
+          -std=c++17
 
 # Command used at clean target
 RM = rm -rf
@@ -31,11 +33,14 @@ RM = rm -rf
 all: create_folders $(PROJ_NAME)
 
 # $^ expands to all target prerequisites
-$(PROJ_NAME): $(OBJ)
+$(PROJ_NAME): $(OBJ_APP) $(OBJ)
 	@ echo "Building target using G++ compiler: $<"
-	@ $(CXX) $^ -o ./bin/$@
+	@ $(CXX) $^ -o ./app/release/$@
 	@ echo "Finished building binary: $@"
 	@ echo " "
+
+run:
+	@ ./app/release/$(PROJ_NAME)
 
 # $@ get the target's name
 # $< get the first prerequisite's name
@@ -44,7 +49,7 @@ $(PROJ_NAME): $(OBJ)
 	@ $(CXX) $< $(CXX_FLAGS) -o $@
 	@ echo " "
 
-./objects/main.o: ./src/main.cpp $(H_SRC)
+./objects/main.o: ./app/main.cpp $(H_SRC_APP)
 	@ echo "Bulding target using G++ compiler: $<"
 	@ $(CXX) $< $(CXX_FLAGS) -o $@
 	@ echo " "
@@ -75,6 +80,8 @@ HPP_TEST_SRC=$(wildcard ./test/include/*.hpp)
 test: create_folders run_tests clean
 
 run_tests: $(OBJ) $(OBJ_TEST) 
+	@ echo "run tests"
+	@ echo "$^"
 	@ $(CXX) $^ -o ./test/bin/test
 	@./test/bin/test
 
@@ -86,6 +93,7 @@ test_debug: $(OBJ) $(OBJ_TEST)
 	
 
 create_folders:
+	@ echo "create folders"
 	@ mkdir -p bin
 	@ mkdir -p objects
 	@ mkdir -p test/bin

@@ -88,6 +88,7 @@ std::list<const State> Problem::successors(State& state)
 bool Problem::goal(const State& state) const
 {
     return state.gold() == _problem_size/2;
+    // return state.gold() == 5;
 }
 
 unsigned int Problem::path_cost() const

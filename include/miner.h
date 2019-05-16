@@ -65,6 +65,9 @@ private:
     /* Explore the mine according the action list. */
     void explore(std::list<State::Action> actions);
 
+    /* Give the score according the remaining battery, picked gold, states visited and actions number. */
+    int score() const;
+
     /* Limited deep first search function. */
     Answer  dfs_limited(const unsigned int maxl);
     State   dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored);
@@ -83,6 +86,9 @@ private:
 
     /* Number of explored rooms. */
     unsigned int _explored_rooms = 0;
+
+    /* Number of actions. */
+    unsigned int _actions_count = 0;
 
     /* Instance of the problem (search for gold inside the mine). */
     Problem _problem;
