@@ -55,7 +55,7 @@ void run(std::string path)
     Mine mine = builder.build();
 
     limited_deep_first_search(builder);
-    iterative_deep_first_search(builder);
+    // iterative_deep_first_search(builder);
 }
 
 void limited_deep_first_search(MineBuilder builder)

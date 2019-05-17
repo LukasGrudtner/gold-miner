@@ -18,7 +18,17 @@ State::State(Room* position, unsigned int battery, unsigned int gold, Action act
     this->_mined = mined;
 }
 
-Room* State::position()
+State::State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double heuristic_value)
+{
+    this->_position = position;
+    this->_battery = battery;
+    this->_gold = gold;
+    this->_action = action;
+    this->_mined = mined;
+    this->_heuristic_value = heuristic_value;
+}
+
+Room* State::position() const
 {
     return _position;
 }
@@ -38,9 +48,14 @@ unsigned int State::gold() const
     return _gold;
 }
 
-std::string State::coordinates() const
+Room::Coordinate State::coordinate() const
 {
-    return this->_coordinates;
+    return this->_coordinate;
+}
+
+void State::coordinate(Room::Coordinate coordinate)
+{
+    this->_coordinate = coordinate;
 }
 
 std::list<const Room*> State::mined_rooms()
@@ -80,3 +95,22 @@ std::string State::hash() const
             explored_states;
 }
 
+void State::h(double value)
+{
+    this->_heuristic_value = value;
+}
+
+double State::h() const
+{
+    return _heuristic_value;
+}
+
+bool State::operator>(const State& state) const
+{
+    return _heuristic_value > state._heuristic_value;
+}
+
+bool State::operator<(const State& state) const
+{
+    return _heuristic_value < state._heuristic_value;
+}

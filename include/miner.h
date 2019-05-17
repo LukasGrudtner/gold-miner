@@ -32,6 +32,7 @@ public:
 public:
     /* Inits the miner in the mine's entrance. */
     Miner(Room* position, unsigned int mine_size);
+    Miner(Room* position, unsigned int mine_size, Heuristic* heuristic);
 
     /* Attribute getter's. */
     const Room*     position()  const;
@@ -78,6 +79,8 @@ private:
 
     /* Iterative deep first search function. */
     Answer dfs_iterative(const unsigned int iterations);
+
+    Answer A_star();
 
 private:
     /* Personal attributes of the miner. */

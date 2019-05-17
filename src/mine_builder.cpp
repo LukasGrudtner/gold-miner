@@ -22,22 +22,21 @@ Mine MineBuilder::build()
     unsigned int counter = mine_size*mine_size;
 
     /* While the file doesn't end, build the room's vector. */
-    int y = 0;
-    int x = 0;
+    unsigned int x = 0;
+    unsigned int y = 0;
     while (counter--)
     {
         file >> goal;
         Room room = build_room(goal);
 
-        std::string coord = "[" + std::to_string(x) + "," + std::to_string(y) + "]";
-        room.coordinates(coord);
+        room.coordinate({x, y});
 
-        y++;
+        x++;
 
-        if (y % mine_size == 0)
+        if (x % mine_size == 0)
         {
-            y = 0;
-            x++;
+            x = 0;
+            y++;
         }
 
         rooms[(mine_size*mine_size)-counter-1] = room;

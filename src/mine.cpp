@@ -1,5 +1,7 @@
 #include "../include/mine.h"
 
+Mine::Mine() {}
+
 Mine::Mine(Room* rooms, unsigned int size)
 {
     this->_size = size;
@@ -30,6 +32,9 @@ void Mine::draw_paths(Room* room, unsigned int index)
         room->set_down(&(this->_rooms[index+_size]));
     if (!case_last_column(index))
         room->set_right(&(this->_rooms[index+1]));
+
+    if (index < (_size*_size)-1)
+        room->set_next(&(this->_rooms[index+1]));
 }
 
 /* Rooms that have no way up. */

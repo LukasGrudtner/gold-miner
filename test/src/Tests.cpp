@@ -1,6 +1,7 @@
 #include "../../include/mine_builder.h"
 #include "../../include/miner.h"
 #include "../include/test.hpp"
+#include "../../include/heuristic.h"
 #include <iostream>
 
 class MineBuilderTest
@@ -69,15 +70,19 @@ private:
     {
         // MineBuilder builder = MineBuilder("input/generated/teste.mine");
         MineBuilder builder = MineBuilder("input/generated/teste2.mine");
+        // MineBuilder builder = MineBuilder("input/generated/teste3.mine");
         // MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
-        Miner miner = Miner(mine.entrance(), mine.size());
+        Heuristic* h = new Heuristic(mine);
+        Miner miner = Miner(mine.entrance(), mine.size(), h);
+
+        // Miner miner = Miner(mine.entrance(), mine.size());
 
         // auto [result, state, actions] = miner.dfs_limited(10000);
         // auto [result, state, actions] = miner.dfs_iterative(100);
         // auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_LIMITED, 100);
-        auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, 100);
+        auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, 500);
 
         State state;
 
@@ -89,9 +94,6 @@ private:
         std::cout << "Score: " << score << std::endl;
         std::cout << "Actions Number: " << actions.size() << std::endl;
         std::cout << "Actions: " << state.actions_str(actions) << std::endl;
-
-
-        
     }
 };
 

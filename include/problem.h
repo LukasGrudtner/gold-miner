@@ -5,12 +5,16 @@
 #ifndef __PROBLEM_H__
 #define __PROBLEM_H__
 
+#include <map>
 #include <list>
 #include <tuple>
 #include <vector>
 #include <math.h>
 #include <algorithm>
+
+#include "mine.h"
 #include "state.h"
+#include "heuristic.h"
 
 /* Define if the order of the successors will be random or not. */
 // #define RANDOM_SUCCESSORS_CHOICE
@@ -27,6 +31,8 @@ public:
 public:
     Problem();
     Problem(unsigned int problem_size, State initial_state);
+    Problem(unsigned int problem_size, State initial_state, Heuristic* heuristic);
+    Problem(unsigned int problem_size, Mine mine);
 
     /* Return a list of successors states for a given state. */
     std::list<const State> successors(State& state);
@@ -40,6 +46,9 @@ public:
     /* Returns the initial state. */
     State& initial_state();
 
+    /* Returns a heuristic value to a given state. */
+    unsigned int heuristic(const State& state) const;
+
 private:
     /* Handle the battery and gold values according the position and previous mined rooms. */
     Attributes handle_attributes(unsigned int battery, unsigned int gold, const Room* position, std::list<const Room*>& mined);
@@ -48,8 +57,10 @@ private:
     State build_state(State& father, Room* new_position, State::Action action);
 
 private:
-    State           _initial_state;
-    unsigned int    _problem_size;
+    State               _initial_state;
+    unsigned int        _problem_size;
+    Mine                _mine;
+    const Heuristic*    _heuristic = nullptr;
 };
 
 #endif

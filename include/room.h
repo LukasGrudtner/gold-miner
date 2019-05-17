@@ -5,6 +5,7 @@
 #ifndef __ROOM_H__
 #define __ROOM_H__
 
+#include <tuple>
 #include <string>
 
 class Room
@@ -17,27 +18,29 @@ public:
     static const Condition FENCE   = (1 << 1);
     static const Condition GOLD    = (1 << 2);
 
+    typedef std::tuple<unsigned int, unsigned int> Coordinate;
+
 public:
     Room();
     Room(Condition condition);
 
     /* Possible paths and its rooms. */
-    Room* left()            const;
-    Room* right()           const;
-    Room* up()              const;
-    Room* down()            const;
+    Room* left()        const;
+    Room* right()       const;
+    Room* up()          const;
+    Room* down()        const;
+    Room* next()        const;
     bool pick_gold();
 
     /* Condition of the room. */
     Condition condition()   const;
 
     /* Coordinates setters. */
-    std::string coordinates() { return this->_coordinates; }
-    void coordinates(std::string coord) { this->_coordinates = coord; }
+    Coordinate  coordinate() const;
+    void        coordinate(Coordinate coordinate);
 
     /* Overcharge equal operator. */
     bool operator==(const Room& room) const;
-
 public:
     friend class Mine;
 
@@ -46,6 +49,7 @@ public:
     void set_right(Room* right);
     void set_up(Room* up);
     void set_down(Room* down);
+    void set_next(Room* room);
 
 private:
     Condition _condition;
@@ -55,9 +59,10 @@ private:
     Room* _right    = nullptr;
     Room* _up       = nullptr;
     Room* _down     = nullptr;
+    Room* _next     = nullptr;
 
     /* Just to facilitate the debug. */
-    std::string _coordinates;
+    Coordinate _coordinate;
 };
 
 #endif

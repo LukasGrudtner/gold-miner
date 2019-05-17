@@ -8,6 +8,14 @@ Miner::Miner(Room* position, unsigned int mine_size)
     this->_problem = Problem(mine_size, State(_position, _battery, 0));
 }
 
+Miner::Miner(Room* position, unsigned int mine_size, Heuristic* heuristic)
+{
+    this->_position = position;
+    this->_mine_size = mine_size;
+    this->_battery = pow(mine_size, BATTERY_POWER);
+    this->_problem = Problem(mine_size, State(_position, _battery, 0), heuristic);
+}
+
 const Room* Miner::position() const
 {
     return this->_position;
@@ -150,7 +158,8 @@ inline int factorial(int x) {
 int Miner::score() const
 {
     unsigned int p_dimension = pow(_mine_size,2);
-    return 10*_battery + 50*_gold + (factorial(_mine_size)/_explored_rooms) + (p_dimension/_actions_count);
+    // return 10*_battery + 50*_gold + (factorial(_mine_size)/_explored_rooms) + (p_dimension/_actions_count);
+    return 10*_battery + 50*_gold;// + (p_dimension/_actions_count);
 }
 
 Miner::Answer Miner::dfs_limited(const unsigned int maxl)
@@ -169,6 +178,8 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
     return {false, state, actions};
 }   
 
+#include <iostream>
+unsigned int counter = 0;
 State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
     if (_problem.goal(state))
@@ -188,7 +199,10 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
         for (State s : _problem.successors(state))
         {
             if (!explored[s.hash()])
-            {
+            {   
+                counter += 1;
+                std::cout << std::to_string(counter) << std::endl;
+
                 State result = dfs_limited(curl+1, maxl, s, actions, explored);
 
                 if (_problem.goal(result))
@@ -199,9 +213,6 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
             }
         }
     }
-
-    
-
     return state;
 }
 

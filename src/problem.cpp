@@ -8,62 +8,69 @@ Problem::Problem(unsigned int problem_size, State initial_state)
     this->_initial_state = initial_state;
 }
 
+#include <iostream>
+Problem::Problem(unsigned int problem_size, State initial_state, Heuristic* heuristic)
+{
+    this->_problem_size = problem_size;
+    this->_initial_state = initial_state;
+    this->_heuristic = heuristic;
+    std::cout << "Heuristic: " << heuristic << std::endl;
+}
+
 std::list<const State> Problem::successors(State& state)
 {
     std::list<const State> successors;
-    std::vector<std::string> aux;
-    std::list<const State> aux_state;
-
     const Room* position = state.position();
 
-    std::list<const Room*> mined = state.mined_rooms();
+    /* Build down successor. */
+    if (position->down() && position->down()->condition() != Room::FENCE)
     {
-        /* Build down successor. */
-        if (position->down() && position->down()->condition() != Room::FENCE)
+        if (state.battery() || position->down()->condition() == Room::GOLD)
         {
             State down = build_state(state, position->down(), State::DOWN);
-
-            down.coordinates() = position->down()->coordinates();
-            aux.push_back(down.hash());
-            aux_state.push_back(down);
+            down.coordinate(position->down()->coordinate());
             successors.push_back(down);
         }
+    }
 
-        /* Build right successor. */
-        if (position->right() && position->right()->condition() != Room::FENCE)
-        {   
+    /* Build right successor. */
+    if (position->right() && position->right()->condition() != Room::FENCE)
+    {   
+        if (state.battery() || position->right()->condition() == Room::GOLD)
+        {
             State right = build_state(state, position->right(), State::RIGHT);
-
-            right.coordinates() = position->right()->coordinates();
-            aux.push_back(right.hash());
-            aux_state.push_back(right);
+            right.coordinate(position->right()->coordinate());
             successors.push_back(right);
         }
+    }
 
-        /* Build left successor. */
-        if (position->left() && position->left()->condition() != Room::FENCE)
+    /* Build left successor. */
+    if (position->left() && position->left()->condition() != Room::FENCE)
+    {
+        if (state.battery() || position->left()->condition() == Room::GOLD)
         {
             State left = build_state(state, position->left(), State::LEFT);
-
-            left.coordinates() = position->left()->coordinates();
-            aux.push_back(left.hash());
-            aux_state.push_back(left);
+            left.coordinate(position->left()->coordinate());
             successors.push_back(left);
         }
-        
-        /* Build up successor. */
-        if (position->up() && position->up()->condition() != Room::FENCE)
+    }
+    
+    /* Build up successor. */
+    if (position->up() && position->up()->condition() != Room::FENCE)
+    {
+        if (state.battery() || position->up()->condition() == Room::GOLD)
         {
             State up = build_state(state, position->up(), State::UP);
-            
-            up.coordinates() = position->up()->coordinates();
-            aux.push_back(up.hash());
-            aux_state.push_back(up);
+            up.coordinate(position->up()->coordinate());
             successors.push_back(up);
         }
+    }
 
-        /* Shuffles successors order. */
-#ifdef RANDOM_SUCCESSORS_CHOICE
+    if (_heuristic) 
+        successors.sort();
+
+    /* Shuffles successors order. */
+    #ifdef RANDOM_SUCCESSORS_CHOICE
         srand(time(NULL));
         std::random_shuffle(aux.begin(), aux.end());
         successors.clear();
@@ -79,15 +86,14 @@ std::list<const State> Problem::successors(State& state)
                 }
             }   
         }
-#endif
+    #endif
             
-    }
     return successors;
 }
 
 bool Problem::goal(const State& state) const
 {
-    return state.gold() == _problem_size/2;
+    return state.gold() == _problem_size/3 && state.position() == _initial_state.position();
     // return state.gold() == 5;
 }
 
@@ -136,5 +142,13 @@ State Problem::build_state(State& father, Room* new_position, State::Action acti
     std::list<const Room*> _mined = father.mined_rooms();
     auto [_battery, _gold, _action] = handle_attributes(father.battery(), father.gold(), new_position, _mined);
 
+    if (_heuristic)
+        return State(new_position, _battery, _gold, action | _action, _mined, _heuristic->value(new_position));
+    
     return State(new_position, _battery, _gold, action | _action, _mined);
+}
+
+unsigned int Problem::heuristic(const State& state) const
+{
+
 }

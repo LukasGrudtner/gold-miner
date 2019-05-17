@@ -20,6 +20,7 @@
 class Mine
 {
 public:
+    Mine();
     /* Inits the mine with its size (n x n). */
     Mine(Room* rooms, unsigned int size);
 

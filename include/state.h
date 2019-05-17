@@ -24,13 +24,17 @@ public:
     State();
     State(Room* position, unsigned int battery, unsigned int gold);
     State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined);
+    State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double heuristic_value);
 
-    /* Attribute getter's. */
-    Room*                   position();
-    Action                  action()        const;
-    unsigned int            battery()       const;
-    unsigned int            gold()          const;
-    std::string             coordinates()   const;
+    /* Attribute getters and setters. */
+    Room*               position()      const;
+    Action              action()        const;
+    unsigned int        battery()       const;
+    unsigned int        gold()          const;
+    Room::Coordinate    coordinate()    const;
+    void                coordinate(Room::Coordinate coordinate);
+    double              h()             const;
+    void                h(double value);
     std::list<const Room*>  mined_rooms();     /* List with the mined rooms by its ancestors states. */
 
     /* Returns a readable string to a given action list. */
@@ -39,13 +43,25 @@ public:
     /* Returns a string to identifier the unicity of the state to the hash table. */
     std::string hash() const;
 
+    std::string to_string() const
+    {
+        return "Battery: " + std::to_string(_battery) +
+                "\nGold: " + std::to_string(_gold) + 
+                "\nCoordinate: [" + std::to_string(std::get<0>(_coordinate)) + 
+                ", " + std::to_string(std::get<1>(_coordinate)) + "]\n";
+    }
+
+    bool operator>(const State& state) const;
+    bool operator<(const State& state) const;
+
 private:
     Room*                   _position   = nullptr;
     unsigned int            _battery    = 0;
     unsigned int            _gold       = 0;
     Action                  _action     = 0;
     std::list<const Room*>  _mined;
-    std::string             _coordinates;
+    Room::Coordinate        _coordinate;
+    double                  _heuristic_value = 0;
 };
 
 #endif

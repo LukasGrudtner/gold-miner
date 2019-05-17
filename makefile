@@ -85,7 +85,12 @@ run_tests: $(OBJ) $(OBJ_TEST)
 	@ $(CXX) $^ -o ./test/bin/test
 	@./test/bin/test
 
-debug: create_folders test_debug clean
+debug: create_folders run_debug clean
+
+run_debug: $(PROJ_NAME)
+	@ gdb app/release/$(PROJ_NAME)
+
+test-debug: create_folders test_debug clean
 
 test_debug: $(OBJ) $(OBJ_TEST) 
 	@ $(CXX) $^ -o ./test/bin/test
