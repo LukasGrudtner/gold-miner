@@ -66,38 +66,15 @@ std::list<const State> Problem::successors(State& state)
         }
     }
 
-    // if (_heuristic)
-    // {
-    //     successors.sort();
-    // }
-
-    /* Shuffles successors order. */
-    #ifdef RANDOM_SUCCESSORS_CHOICE
-        srand(time(NULL));
-        std::random_shuffle(aux.begin(), aux.end());
-        successors.clear();
-
-        for (std::string str : aux)
-        {
-            for (const State state : aux_state)
-            {
-                if (state.hash() == str)
-                {
-                    successors.push_back(state);
-                    break;
-                }
-            }   
-        }
-    #endif
+    if (_heuristic)
+        successors.sort();
             
     return successors;
 }
 
 bool Problem::goal(const State& state) const
 {
-    int x = ceil(((double) _problem_size)/3.0);
     return state.gold() == _problem_size/3 && state.position() == _initial_state.position();
-    // return state.gold() == 5;
 }
 
 unsigned int Problem::path_cost() const
@@ -149,9 +126,4 @@ State Problem::build_state(State& father, Room* new_position, State::Action acti
         return State(new_position, _battery, _gold, action | _action, _mined, _heuristic->value(new_position), father.g()+path_cost(),_heuristic->value(new_position) + father.g()+path_cost());
     
     return State(new_position, _battery, _gold, action | _action, _mined);
-}
-
-unsigned int Problem::heuristic(const State& state) const
-{
-
 }
