@@ -5,6 +5,8 @@
 #include "../include/mine.h"
 #include "../include/miner.h"
 #include "../include/mine_builder.h"
+#include "../include/manhattan.h"
+#include "../include/euclidian.h"
 
 #define DEFAULT_PATH "input/generated/teste2.mine"
 
@@ -84,9 +86,12 @@ void A_star(MineBuilder builder)
 {
     Mine mine = builder.build();
 
-    Heuristic* h = new Heuristic(mine);
-    Miner miner = Miner(mine.entrance(), mine.size(), h);
+    Heuristic* manhattan = new ManhattanDistance(mine);
+    Miner miner = Miner(mine.entrance(), mine.size(), manhattan);
+
     Miner::Result result = miner.execute(Miner::A_STAR);
+
+    delete manhattan;
 
     print("A*", result);
 }
@@ -95,10 +100,13 @@ void limited_deep_first_search_with_heuristic(MineBuilder builder)
 {
     Mine mine = builder.build();
 
-    Heuristic* h = new Heuristic(mine);
-    Miner miner = Miner(mine.entrance(), mine.size(), h);
+    Heuristic* euclidian = new EuclidianDistance(mine);
+    Miner miner = Miner(mine.entrance(), mine.size(), euclidian);
+
     Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, maxl_dfs_limited);
 
+    delete euclidian;
+    
     print("Iterative Deep First Search with Heuristic (max " + std::to_string(maxi_dfs_iterative) + " iterations)", result);
 }
 

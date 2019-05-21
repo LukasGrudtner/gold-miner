@@ -178,14 +178,6 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
     return {false, state, actions};
 }
 
-double distance(const Room* x, const Room* y)
-{
-    auto [a1, b1] = x->coordinate();
-    auto [a2, b2] = y->coordinate();
-
-    return sqrt(pow((int)(a2-a1), 2) + pow((int)(b2-b1), 2));
-}
-
 Miner::Answer Miner::A_star()
 {
     State q = _problem.initial_state();

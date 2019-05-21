@@ -4,6 +4,7 @@
 #include <tuple>
 #include <vector>
 #include <math.h>
+#include <stdlib.h>
 #include "mine.h"
 #include "state.h"
 
@@ -13,14 +14,14 @@ public:
     typedef std::tuple<Room*, double> Pair;
 
 public:
-    Heuristic(Mine mine);
+    Heuristic();
     double value(Room* room) const;
 
 private:
-    void measure(Mine mine);
-    double distance(const Room* x, const Room* y) const;
+    virtual void measure(Mine mine) = 0;
+    virtual double distance(const Room* x, const Room* y) const = 0;
 
-private:
+protected:
     std::vector<Pair> _heuristic_values;
 };
 

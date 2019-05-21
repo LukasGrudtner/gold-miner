@@ -2,6 +2,8 @@
 #include "../../include/miner.h"
 #include "../include/test.hpp"
 #include "../../include/heuristic.h"
+#include "../../include/manhattan.h"
+#include "../../include/euclidian.h"
 #include <iostream>
 
 class MineBuilderTest
@@ -76,7 +78,7 @@ private:
         MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
-        Heuristic* h = new Heuristic(mine);
+        Heuristic* h = new ManhattanDistance(mine);
         Miner miner = Miner(mine.entrance(), mine.size(), h);
 
         // Miner miner = Miner(mine.entrance(), mine.size());
