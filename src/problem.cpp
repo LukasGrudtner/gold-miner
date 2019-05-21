@@ -12,9 +12,9 @@ Problem::Problem(unsigned int problem_size, State initial_state)
 Problem::Problem(unsigned int problem_size, State initial_state, Heuristic* heuristic)
 {
     this->_problem_size = problem_size;
-    this->_initial_state = initial_state;
     this->_heuristic = heuristic;
-    std::cout << "Heuristic: " << heuristic << std::endl;
+    
+    _initial_state = State(initial_state.position(), initial_state.battery(), initial_state.gold(), initial_state.action(), initial_state.mined_rooms(), heuristic->value(initial_state.position()), initial_state.g(), heuristic->value(initial_state.position()));
 }
 
 std::list<const State> Problem::successors(State& state)
@@ -66,8 +66,10 @@ std::list<const State> Problem::successors(State& state)
         }
     }
 
-    if (_heuristic) 
-        successors.sort();
+    // if (_heuristic)
+    // {
+    //     successors.sort();
+    // }
 
     /* Shuffles successors order. */
     #ifdef RANDOM_SUCCESSORS_CHOICE
@@ -93,6 +95,7 @@ std::list<const State> Problem::successors(State& state)
 
 bool Problem::goal(const State& state) const
 {
+    int x = ceil(((double) _problem_size)/3.0);
     return state.gold() == _problem_size/3 && state.position() == _initial_state.position();
     // return state.gold() == 5;
 }
@@ -143,7 +146,7 @@ State Problem::build_state(State& father, Room* new_position, State::Action acti
     auto [_battery, _gold, _action] = handle_attributes(father.battery(), father.gold(), new_position, _mined);
 
     if (_heuristic)
-        return State(new_position, _battery, _gold, action | _action, _mined, _heuristic->value(new_position));
+        return State(new_position, _battery, _gold, action | _action, _mined, _heuristic->value(new_position), father.g()+path_cost(),_heuristic->value(new_position) + father.g()+path_cost());
     
     return State(new_position, _battery, _gold, action | _action, _mined);
 }

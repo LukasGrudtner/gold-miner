@@ -5,6 +5,7 @@
 #ifndef __MINER_H__
 #define __MINER_H__
 
+#include <set>
 #include <list>
 #include <math.h>
 #include <string>
@@ -23,11 +24,14 @@ public:
 
     /* Type definition of search strategies. */
     typedef unsigned char SearchStrategy;
-    static const SearchStrategy DEEP_FIRST_SEARCH_LIMITED = (1 << 0);
+    static const SearchStrategy DEEP_FIRST_SEARCH_LIMITED   = (1 << 0);
     static const SearchStrategy DEEP_FIRST_SEARCH_ITERATIVE = (1 << 1);
+    static const SearchStrategy A_STAR                      = (1 << 2);
 
     /* Type definition of a Result (result, score, explored rooms, action list); */
     typedef std::tuple<bool, unsigned int, unsigned int, std::list<State::Action>> Result;
+
+    // typedef std::tuple<std::string, State> CameFrom;
 
 public:
     /* Inits the miner in the mine's entrance. */
@@ -46,7 +50,7 @@ public:
     unsigned int number_explored_rooms() const;
 
     /* The miner will search a way to a goal state and will follow it. */
-    Result execute(SearchStrategy strategy, unsigned int parameter);
+    Result execute(SearchStrategy strategy, unsigned int parameter=1);
 
 private:
     /* Methods to guide the miner inside the mine. */
@@ -81,6 +85,7 @@ private:
     Answer dfs_iterative(const unsigned int iterations);
 
     Answer A_star();
+    std::list<State::Action> reconstruct_path(std::map<std::string, State> came_from, State position);
 
 private:
     /* Personal attributes of the miner. */

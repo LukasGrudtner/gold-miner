@@ -69,9 +69,11 @@ private:
     void DFS_LIMITED_SEARCH()
     {
         // MineBuilder builder = MineBuilder("input/generated/teste.mine");
-        MineBuilder builder = MineBuilder("input/generated/teste2.mine");
+        // MineBuilder builder = MineBuilder("input/generated/teste2.mine");
         // MineBuilder builder = MineBuilder("input/generated/teste3.mine");
-        // MineBuilder builder = MineBuilder("input/mine.txt");
+        // MineBuilder builder = MineBuilder("input/generated/teste4.mine");
+        // MineBuilder builder = MineBuilder("input/generated/teste5.mine");
+        MineBuilder builder = MineBuilder("input/mine.txt");
         Mine mine = builder.build();
 
         Heuristic* h = new Heuristic(mine);
@@ -82,7 +84,9 @@ private:
         // auto [result, state, actions] = miner.dfs_limited(10000);
         // auto [result, state, actions] = miner.dfs_iterative(100);
         // auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_LIMITED, 100);
-        auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, 500);
+        // auto [result, score, explored_states, actions] = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, 500);
+        auto [result, score, explored_states, actions] = miner.execute(Miner::A_STAR, 100);
+        
 
         State state;
 

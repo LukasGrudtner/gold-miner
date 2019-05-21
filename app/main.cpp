@@ -11,6 +11,7 @@
 void run(std::string path);
 void limited_deep_first_search(MineBuilder builder);
 void iterative_deep_first_search(MineBuilder builder);
+void A_star(MineBuilder builder);
 void print(std::string search_type, Miner::Result answer);
 
 unsigned int maxl_dfs_limited = 0;
@@ -55,7 +56,8 @@ void run(std::string path)
     Mine mine = builder.build();
 
     limited_deep_first_search(builder);
-    // iterative_deep_first_search(builder);
+    iterative_deep_first_search(builder);
+    A_star(builder);
 }
 
 void limited_deep_first_search(MineBuilder builder)
@@ -74,6 +76,17 @@ void iterative_deep_first_search(MineBuilder builder)
     Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, maxi_dfs_iterative);
 
     print("Iterative Deep First Search (max " + std::to_string(maxi_dfs_iterative) + " iterations)", result);
+}
+
+void A_star(MineBuilder builder)
+{
+    Mine mine = builder.build();
+
+    Heuristic* h = new Heuristic(mine);
+    Miner miner = Miner(mine.entrance(), mine.size(), h);
+    Miner::Result result = miner.execute(Miner::A_STAR);
+
+    print("A*", result);
 }
 
 void print(std::string search_type, Miner::Result answer)

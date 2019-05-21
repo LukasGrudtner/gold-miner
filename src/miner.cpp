@@ -132,6 +132,9 @@ Miner::Answer Miner::search(SearchStrategy strategy, unsigned int parameter)
     case Miner::DEEP_FIRST_SEARCH_LIMITED:
         return dfs_limited(parameter);
     
+    case Miner::A_STAR:
+        return A_star();
+
     default:
         return dfs_limited(parameter);
     }
@@ -176,9 +179,85 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
     }
 
     return {false, state, actions};
-}   
+}
 
 #include <iostream>
+
+double distance(const Room* x, const Room* y)
+{
+    auto [a1, b1] = x->coordinate();
+    auto [a2, b2] = y->coordinate();
+
+    return sqrt(pow((int)(a2-a1), 2) + pow((int)(b2-b1), 2));
+}
+
+Miner::Answer Miner::A_star()
+{
+    State q = _problem.initial_state();
+
+    /* conjunto de nós a serem pesquisados. */
+    std::list<State> open_set;
+    open_set.push_back(q);
+
+    std::unordered_map<std::string, bool> closed_set;
+    std::map<std::string, State> came_from;
+
+    int counter = 0;
+
+    while (!open_set.empty())
+    {
+        // a
+        State current = open_set.front();
+
+        if (_problem.goal(current))
+            return {true, current, reconstruct_path(came_from, current)};
+
+        _explored_rooms++;
+
+        //b
+        open_set.pop_front();
+        closed_set[current.hash()] = true;
+
+        //d
+        for (State neighbor : _problem.successors(current))
+        {
+            if (closed_set[neighbor.hash()])
+                continue;
+
+            unsigned int tentative_g_score = current.g() + _problem.path_cost();
+
+            if (std::find(open_set.begin(), open_set.end(), neighbor) == open_set.end())
+            {
+                open_set.push_back(neighbor);
+                open_set.sort();
+            }
+
+            if (tentative_g_score > neighbor.g())
+                continue;
+
+            /* This path is the best until now. Record it! */            
+            came_from[neighbor.hash()] = current;
+        }
+    }
+
+    return {false, q, reconstruct_path(came_from, q)};
+}
+
+std::list<State::Action> Miner::reconstruct_path(std::map<std::string, State> came_from, State position)
+{
+    std::list<State::Action> actions;
+    State current = position;
+
+    while (came_from.count(current.hash()))
+    {
+        actions.push_front(current.action());
+        current = came_from[current.hash()];
+    }
+
+    return actions;    
+}
+
+
 unsigned int counter = 0;
 State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
@@ -201,7 +280,7 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
             if (!explored[s.hash()])
             {   
                 counter += 1;
-                std::cout << std::to_string(counter) << std::endl;
+                // std::cout << std::to_string(counter) << std::endl;
 
                 State result = dfs_limited(curl+1, maxl, s, actions, explored);
 

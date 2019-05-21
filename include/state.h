@@ -24,7 +24,7 @@ public:
     State();
     State(Room* position, unsigned int battery, unsigned int gold);
     State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined);
-    State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double heuristic_value);
+    State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double h, double g, double value);
 
     /* Attribute getters and setters. */
     Room*               position()      const;
@@ -34,7 +34,9 @@ public:
     Room::Coordinate    coordinate()    const;
     void                coordinate(Room::Coordinate coordinate);
     double              h()             const;
-    void                h(double value);
+    double              g()             const;
+    void                value(double value);
+
     std::list<const Room*>  mined_rooms();     /* List with the mined rooms by its ancestors states. */
 
     /* Returns a readable string to a given action list. */
@@ -48,11 +50,15 @@ public:
         return "Battery: " + std::to_string(_battery) +
                 "\nGold: " + std::to_string(_gold) + 
                 "\nCoordinate: [" + std::to_string(std::get<0>(_coordinate)) + 
-                ", " + std::to_string(std::get<1>(_coordinate)) + "]\n";
+                ", " + std::to_string(std::get<1>(_coordinate)) + "]\n" +
+                "\nh(): " + std::to_string(_heuristic_value) + 
+                "\ng(): " + std::to_string(_g_value)+
+                "\nvalue(): " + std::to_string(_value);
     }
 
     bool operator>(const State& state) const;
     bool operator<(const State& state) const;
+    bool operator==(const State& state) const;
 
 private:
     Room*                   _position   = nullptr;
@@ -61,7 +67,9 @@ private:
     Action                  _action     = 0;
     std::list<const Room*>  _mined;
     Room::Coordinate        _coordinate;
-    double                  _heuristic_value = 0;
+    double                  _value              = 0;
+    double                  _heuristic_value    = 0;
+    unsigned int            _g_value            = 0;
 };
 
 #endif
