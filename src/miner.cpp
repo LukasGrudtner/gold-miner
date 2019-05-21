@@ -48,6 +48,7 @@ Miner::Result Miner::execute(Miner::SearchStrategy strategy, unsigned int parame
     if (result && is_goal_state(state))
         explore(actions);
 
+
     return {result, score(), _explored_rooms, actions};
 }
 
@@ -154,15 +155,11 @@ void Miner::explore(std::list<State::Action> actions)
     }
 }
 
-inline int factorial(int x) {
-  return (x == 1 ? x : x * factorial(x - 1));
-}
-
 int Miner::score() const
 {
-    unsigned int p_dimension = pow(_mine_size,2);
+    unsigned int p_dimension = pow(_mine_size,_mine_size);
     // return 10*_battery + 50*_gold + (factorial(_mine_size)/_explored_rooms) + (p_dimension/_actions_count);
-    return 10*_battery + 50*_gold;// + (p_dimension/_actions_count);
+    return _gold * (_battery+1) + (p_dimension/_actions_count) + (p_dimension/_explored_rooms);// + (p_dimension/_actions_count);
 }
 
 Miner::Answer Miner::dfs_limited(const unsigned int maxl)
@@ -180,8 +177,6 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
 
     return {false, state, actions};
 }
-
-#include <iostream>
 
 double distance(const Room* x, const Room* y)
 {
@@ -261,6 +256,8 @@ std::list<State::Action> Miner::reconstruct_path(std::map<std::string, State> ca
 unsigned int counter = 0;
 State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
+    _explored_rooms++;
+
     if (_problem.goal(state))
     {
         actions.push_front(state.action());
@@ -273,15 +270,10 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
     {
         explored[state.hash()] = true;
 
-        _explored_rooms++;
-
         for (State s : _problem.successors(state))
         {
             if (!explored[s.hash()])
             {   
-                counter += 1;
-                // std::cout << std::to_string(counter) << std::endl;
-
                 State result = dfs_limited(curl+1, maxl, s, actions, explored);
 
                 if (_problem.goal(result))

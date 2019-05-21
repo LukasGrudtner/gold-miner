@@ -97,7 +97,7 @@ void limited_deep_first_search_with_heuristic(MineBuilder builder)
 
     Heuristic* h = new Heuristic(mine);
     Miner miner = Miner(mine.entrance(), mine.size(), h);
-    Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_LIMITED, maxl_dfs_limited);
+    Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, maxl_dfs_limited);
 
     print("Iterative Deep First Search with Heuristic (max " + std::to_string(maxi_dfs_iterative) + " iterations)", result);
 }

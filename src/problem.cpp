@@ -8,7 +8,6 @@ Problem::Problem(unsigned int problem_size, State initial_state)
     this->_initial_state = initial_state;
 }
 
-#include <iostream>
 Problem::Problem(unsigned int problem_size, State initial_state, Heuristic* heuristic)
 {
     this->_problem_size = problem_size;
