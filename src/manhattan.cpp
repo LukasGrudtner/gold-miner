@@ -5,6 +5,8 @@ ManhattanDistance::ManhattanDistance(Mine mine)
     measure(mine);
 }
 
+ManhattanDistance::~ManhattanDistance() {}
+
 double ManhattanDistance::distance(const Room* x, const Room* y) const
 {
     auto [a1, b1] = x->coordinate();
@@ -24,8 +26,6 @@ void ManhattanDistance::measure(Mine mine)
 
         for (; room_k; room_k = room_k->next())
         {
-            auto [x, y] = room_k->coordinate();
-
             if (room_k->condition() == Room::GOLD)
             {
                 Pair p = {room_i, distance(room_i, room_k)};

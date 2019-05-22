@@ -70,17 +70,17 @@ std::string State::actions_str(std::list<State::Action> actions) const
     std::string str;
     for (auto action = actions.begin(); action != actions.end(); action++)
     {
-        if      (*action & State::RIGHT) str += "D -> ";
-        else if (*action & State::LEFT)  str += "E -> ";
-        else if (*action & State::DOWN)  str += "B -> ";
-        else if (*action & State:: UP)   str += "C -> ";
+        if      (*action & State::RIGHT) str += "D";
+        else if (*action & State::LEFT)  str += "E";
+        else if (*action & State::DOWN)  str += "B";
+        else if (*action & State:: UP)   str += "C";
+
+        if (action != actions.begin() && action != std::prev(actions.end()))
+            str += " -> ";
 
         if (*action & State::PICK_GOLD)
-        {
-            str += "PO"; 
-            if (action != actions.begin() && action != std::prev(actions.end()))
-                str += " -> ";
-        } 
+            str += "PO -> "; 
+
     }
     return str;
 }

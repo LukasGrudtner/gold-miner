@@ -2,6 +2,7 @@
 
 Heuristic::Heuristic() {}
 
+Heuristic::~Heuristic() {}
 
 double Heuristic::value(Room* room) const
 {

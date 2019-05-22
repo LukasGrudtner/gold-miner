@@ -179,38 +179,44 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
     return {false, state, actions};
 }
 
-#include <iostream>
 Miner::Answer Miner::A_star()
 {
     State q = _problem.initial_state();
 
-    /* Node set waiting to be explored. */
+    /* States set waiting to be explored. */
     std::list<State> open_set;
     open_set.push_back(q);
 
+    /* States set already explored. */
     std::unordered_map<std::string, bool> closed_set;
     std::map<std::string, State> came_from;
 
     while (!open_set.empty())
     {
+        /* Take the first one and remove it from open set. */
         State current = open_set.front();
-        // open_set.erase(open_set.begin());
         open_set.pop_front();
 
         _explored_rooms++;
 
+        /* If current state is a goal state, return! */
         if (_problem.goal(current))
             return {true, current, reconstruct_path(came_from, current)};
 
+        /* Include it in the closed set. */
         closed_set[current.hash()] = true;
 
         for (State neighbor : _problem.successors(current))
         {
+            /* If already explored, skip. */
             if (closed_set[neighbor.hash()])
                 continue;
 
             unsigned int tentative_g_score = current.g() + _problem.path_cost();
 
+            /* Add this state to open set.
+               There is no need to check if it already exists on the list, because the condition above. 
+            */
             open_set.push_back(neighbor);
 
             if (tentative_g_score > neighbor.g())
@@ -221,6 +227,7 @@ Miner::Answer Miner::A_star()
         }
     }
 
+    /* Goal state not found, return false. */
     return {false, q, reconstruct_path(came_from, q)};
 }
 
@@ -234,6 +241,7 @@ std::list<State::Action> Miner::reconstruct_path(std::map<std::string, State> ca
         actions.push_front(current.action());
         current = came_from[current.hash()];
     }
+    actions.push_front(0);
 
     return actions;    
 }
@@ -242,24 +250,30 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
 {
     _explored_rooms++;
 
+    /* If state is a goal state, return! */
     if (_problem.goal(state))
     {
         actions.push_front(state.action());
         return state;
     }
 
+    /* If we reached the max level, return. */
     if (curl+1 == maxl)
         return state;
     else
     {
+        /* Add state in the explored list. */
         explored[state.hash()] = true;
 
         for (State s : _problem.successors(state))
         {
+            /* If s has not being explored... */
             if (!explored[s.hash()])
             {   
+                /* Calls the search for state s. */
                 State result = dfs_limited(curl+1, maxl, s, actions, explored);
 
+                /* If s reached a goal state, return this state! */
                 if (_problem.goal(result))
                 {
                     actions.push_front(state.action());
@@ -268,6 +282,8 @@ State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State
             }
         }
     }
+
+    /* State goal not found. */
     return state;
 }
 

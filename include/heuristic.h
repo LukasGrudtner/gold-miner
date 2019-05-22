@@ -19,6 +19,8 @@ public:
     /* Heuristic constructor. */
     Heuristic();
 
+    virtual ~Heuristic();
+
     /* Returns the heuristic value for a given room. */
     double value(Room* room) const;
 

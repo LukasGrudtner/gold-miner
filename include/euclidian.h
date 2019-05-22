@@ -10,6 +10,8 @@ public:
     /* Euclidian distance constructor. */
     EuclidianDistance(Mine mine);
 
+    ~EuclidianDistance();
+
 private:
     /* Returns the distance between the two given rooms according the euclidian distance. */
     double distance(const Room* x, const Room* y) const;

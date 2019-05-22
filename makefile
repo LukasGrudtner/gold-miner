@@ -98,7 +98,6 @@ test_debug: $(OBJ) $(OBJ_TEST)
 	
 
 create_folders:
-	@ echo "create folders"
 	@ mkdir -p bin
 	@ mkdir -p objects
 	@ mkdir -p test/bin
