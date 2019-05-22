@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include <string>
 #include <iostream>
 #include <unistd.h>
@@ -63,7 +67,9 @@ void limited_deep_first_search(MineBuilder builder)
 {
     double t1 = time();
 
-    Mine mine = builder.build();
+    auto [rooms, size] = builder.build();
+    Mine mine = Mine(rooms, size);
+
     Miner miner = Miner(mine.entrance(), mine.size());
     Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_LIMITED, maxl_dfs_limited);
 
@@ -76,7 +82,9 @@ void iterative_deep_first_search(MineBuilder builder)
 {
     double t1 = time();
 
-    Mine mine = builder.build();
+    auto [rooms, size] = builder.build();
+    Mine mine = Mine(rooms, size);
+
     Miner miner = Miner(mine.entrance(), mine.size());
     Miner::Result result = miner.execute(Miner::DEEP_FIRST_SEARCH_ITERATIVE, maxi_dfs_iterative);
 
@@ -89,7 +97,8 @@ void A_star(MineBuilder builder)
 {
     double t1 = time();
 
-    Mine mine = builder.build();
+    auto [rooms, size] = builder.build();
+    Mine mine = Mine(rooms, size);
 
     Heuristic* manhattan = new ManhattanDistance(mine);
     Miner miner = Miner(mine.entrance(), mine.size(), manhattan);
@@ -107,7 +116,8 @@ void limited_deep_first_search_with_heuristic(MineBuilder builder)
 {
     double t1 = time();
 
-    Mine mine = builder.build();
+    auto [rooms, size] = builder.build();
+    Mine mine = Mine(rooms, size);
 
     Heuristic* euclidian = new EuclidianDistance(mine);
     Miner miner = Miner(mine.entrance(), mine.size(), euclidian);

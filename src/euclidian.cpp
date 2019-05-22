@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/euclidian.h"
 
 EuclidianDistance::EuclidianDistance(Mine mine)

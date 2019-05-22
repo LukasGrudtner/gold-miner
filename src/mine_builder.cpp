@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/mine_builder.h"
 
 MineBuilder::MineBuilder(std::string filepath)
@@ -5,11 +9,11 @@ MineBuilder::MineBuilder(std::string filepath)
     this->_filepath = filepath;
 }
 
-Mine MineBuilder::build()
+MineBuilder::MineInit MineBuilder::build()
 {
     std::string goal;
     std::ifstream file;
-    Room* rooms;
+    std::vector<Room*> rooms;
     unsigned int mine_size = 0;
 
     /* Open file. */
@@ -17,7 +21,6 @@ Mine MineBuilder::build()
 
     /* Read mine's size. */
     file >> mine_size;
-    rooms = new Room[mine_size*mine_size];
 
     unsigned int counter = mine_size*mine_size;
 
@@ -27,36 +30,35 @@ Mine MineBuilder::build()
     while (counter--)
     {
         file >> goal;
-        Room room = build_room(goal);
 
-        room.coordinate({x, y});
+        Room* room = build_room(goal);
+        room->coordinate({x, y});
 
         x++;
-
         if (x % mine_size == 0)
         {
             x = 0;
             y++;
         }
 
-        rooms[(mine_size*mine_size)-counter-1] = room;
+        rooms.push_back(room);
     }
 
     /* Close file. */
     file.close();
 
-    return Mine(rooms, mine_size);
+    return {rooms, mine_size};
 }
 
-Room MineBuilder::build_room(std::string condition)
+Room* MineBuilder::build_room(std::string condition)
 {
-    Room room;
+    Room* room;
     if (condition == "0")
-        room = Room(Room::FREE);
+        room = new Room(Room::FREE);
     else if (condition == "1")
-        room = Room(Room::FENCE);
+        room = new Room(Room::FENCE);
     else
-        room = Room(Room::GOLD);
+        room = new Room(Room::GOLD);
     
     return room;
 }

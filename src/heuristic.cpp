@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/heuristic.h"
 
 Heuristic::Heuristic() {}

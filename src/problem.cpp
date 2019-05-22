@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/problem.h"
 
 Problem::Problem() {}

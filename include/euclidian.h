@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __EUCLIDIAN_H__
 #define __EUCLIDIAN_H__
 

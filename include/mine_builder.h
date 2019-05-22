@@ -5,8 +5,9 @@
 #ifndef __MINE_BUILDER_H__
 #define __MINE_BUILDER_H__
 
-#include <string>
+#include <tuple>
 #include <vector>
+#include <string>
 #include <fstream>
 #include <iostream>
 #include "mine.h"
@@ -15,15 +16,18 @@
 class MineBuilder
 {
 public:
+    /* Type definition of a tuple to init a mine. */
+    typedef std::tuple<std::vector<Room*>, unsigned int> MineInit; 
+public:
     /* Mine builder constructor. */ 
     MineBuilder(std::string filepath);
 
     /* Build and returns the mine. */
-    Mine build();
+    MineInit build();
 
 private:
     /* Build and return a individual room, according its condition. */
-    Room build_room(std::string condition);
+    Room* build_room(std::string condition);
 
 private:
     std::string _filepath;

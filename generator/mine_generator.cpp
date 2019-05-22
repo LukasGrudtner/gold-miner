@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "mine_generator.h"
 
 #define RATIO_FREE 0.65

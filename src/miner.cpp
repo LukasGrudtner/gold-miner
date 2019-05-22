@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/miner.h"
 
 Miner::Miner(Room* position, unsigned int mine_size)

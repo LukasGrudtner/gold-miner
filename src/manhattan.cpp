@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #include "../include/manhattan.h"
 
 ManhattanDistance::ManhattanDistance(Mine mine)

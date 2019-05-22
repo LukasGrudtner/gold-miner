@@ -1,3 +1,7 @@
+/**
+ * Author: Lukas Derner Grüdtner
+ **/
+
 #ifndef __MANHATTAN_H
 #define __MANHATTAN_H
 
