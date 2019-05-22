@@ -12,7 +12,7 @@ Mine::Mine(std::vector<Room*> rooms, unsigned int size)
     
     this->_rooms = rooms;
 
-    for (int i = 0; i < _rooms.size(); i++)
+    for (size_t i = 0; i < _rooms.size(); i++)
         draw_paths(_rooms[i], i);
 }
 
