@@ -17,10 +17,13 @@
  * Entrance = room 00.
  **/
 
+/* Definition of a mine. */
 class Mine
 {
 public:
+    /* Mine default constructor. */
     Mine();
+
     /* Inits the mine with its size (n x n). */
     Mine(Room* rooms, unsigned int size);
 

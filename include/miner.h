@@ -16,6 +16,7 @@
 #include "state.h"
 #include "problem.h"
 
+/* Definition of the agent to this problem. */
 class Miner
 {
 public:
@@ -31,11 +32,11 @@ public:
     /* Type definition of a Result (result, score, explored rooms, action list); */
     typedef std::tuple<bool, unsigned int, unsigned int, std::list<State::Action>> Result;
 
-    // typedef std::tuple<std::string, State> CameFrom;
-
 public:
     /* Inits the miner in the mine's entrance. */
     Miner(Room* position, unsigned int mine_size);
+
+    /* Insert an heuristic to guide the miner. */
     Miner(Room* position, unsigned int mine_size, Heuristic* heuristic);
 
     /* Attribute getter's. */
@@ -84,7 +85,10 @@ private:
     /* Iterative deep first search function. */
     Answer dfs_iterative(const unsigned int iterations);
 
+    /* A* algorithm. */
     Answer A_star();
+
+    /* Support function to reconstruct the path searched in the A* algorithm. */
     std::list<State::Action> reconstruct_path(std::map<std::string, State> came_from, State position);
 
 private:

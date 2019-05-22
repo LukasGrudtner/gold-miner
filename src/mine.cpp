@@ -68,5 +68,3 @@ bool Mine::case_last_column(unsigned int index)
         return true;
     return false;
 }
-
-

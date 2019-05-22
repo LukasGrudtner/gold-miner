@@ -37,6 +37,6 @@ void EuclidianDistance::measure(Mine mine)
                 }
             }
         }
-        _heuristic_values.push_back(pair);
+        _values.push_back(pair);
     }
 }

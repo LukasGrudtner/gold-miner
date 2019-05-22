@@ -8,19 +8,21 @@
 #include <tuple>
 #include <string>
 
+/* Definition of a position inside the mine. */
 class Room
 {
 public:
-
     /* Type definition of a Codition, the state of the room that the miner can find. */
     typedef unsigned char Condition;
-    static const Condition FREE = (1 << 0);
-    static const Condition FENCE   = (1 << 1);
-    static const Condition GOLD    = (1 << 2);
+    static const Condition FREE  = (1 << 0);
+    static const Condition FENCE = (1 << 1);
+    static const Condition GOLD  = (1 << 2);
 
+    /* Type definition of a Coordinate, a tuple of unsigned ints. */
     typedef std::tuple<unsigned int, unsigned int> Coordinate;
 
 public:
+    /* Room's constructors. */
     Room();
     Room(Condition condition);
 
@@ -30,6 +32,8 @@ public:
     Room* up()          const;
     Room* down()        const;
     Room* next()        const;
+
+    /* Pick gold action, remove the gold of the room. */
     bool pick_gold();
 
     /* Condition of the room. */
@@ -39,9 +43,11 @@ public:
     Coordinate  coordinate() const;
     void        coordinate(Coordinate coordinate);
 
-    /* Overcharge equal operator. */
+    /* Equal operator overload. */
     bool operator==(const Room& room) const;
+
 public:
+    /* Friend class, to access its private members. */
     friend class Mine;
 
     /* Room setter's for Mine class use. */
@@ -52,6 +58,7 @@ public:
     void set_next(Room* room);
 
 private:
+    /* Condition of the room. */
     Condition _condition;
 
     /* Pointers to adjacent rooms. */
@@ -61,7 +68,7 @@ private:
     Room* _down     = nullptr;
     Room* _next     = nullptr;
 
-    /* Just to facilitate the debug. */
+    /* Coordinates, just to facilitate the debug. */
     Coordinate _coordinate;
 };
 

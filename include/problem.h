@@ -11,13 +11,9 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
-
 #include "mine.h"
 #include "state.h"
 #include "heuristic.h"
-
-/* Define if the order of the successors will be random or not. */
-// #define RANDOM_SUCCESSORS_CHOICE
 
 /* Define the power of the battery according the problem's size. */
 #define BATTERY_POWER 1.5
@@ -29,10 +25,11 @@ public:
     /* Type definition of an Attribute (battery, gold, action list). */
     typedef std::tuple<unsigned int, unsigned int, State::Action> Attributes;
 public:
+    /* Problem constructors. */
     Problem();
+    Problem(unsigned int problem_size, Mine mine);
     Problem(unsigned int problem_size, State initial_state);
     Problem(unsigned int problem_size, State initial_state, Heuristic* heuristic);
-    Problem(unsigned int problem_size, Mine mine);
 
     /* Return a list of successors states for a given state. */
     std::list<const State> successors(State& state);
@@ -57,10 +54,17 @@ private:
     State build_state(State& father, Room* new_position, State::Action action);
 
 private:
-    State               _initial_state;
-    unsigned int        _problem_size;
-    Mine                _mine;
-    const Heuristic*    _heuristic = nullptr;
+    /* Initial state to start the searchs. */
+    State _initial_state;
+
+    /* Problem size (n). */
+    unsigned int _problem_size;
+
+    /* Instance of the mine. */
+    Mine _mine;
+
+    /* Heuristic used in this problem. */
+    const Heuristic* _heuristic = nullptr;
 };
 
 #endif

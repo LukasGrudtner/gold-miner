@@ -9,6 +9,7 @@
 #include <string>
 #include "room.h"
 
+/* Definition of a State. */
 class State
 {
 public:
@@ -21,10 +22,11 @@ public:
     static const Action PICK_GOLD   = (1 << 4); /* 16 */
 
 public:
+    /* State's constructors. */
     State();
     State(Room* position, unsigned int battery, unsigned int gold);
     State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined);
-    State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double h, double g, double value);
+    State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double h, double g, double f);
 
     /* Attribute getters and setters. */
     Room*               position()      const;
@@ -35,9 +37,10 @@ public:
     void                coordinate(Room::Coordinate coordinate);
     double              h()             const;
     double              g()             const;
-    void                value(double value);
+    void                f(double f);
 
-    std::list<const Room*>  mined_rooms();     /* List with the mined rooms by its ancestors states. */
+    /* Returns the lList with the mined rooms by its ancestors states. */
+    std::list<const Room*> mined_rooms();     
 
     /* Returns a readable string to a given action list. */
     std::string actions_str(std::list<State::Action> actions) const;
@@ -45,31 +48,38 @@ public:
     /* Returns a string to identifier the unicity of the state to the hash table. */
     std::string hash() const;
 
-    std::string to_string() const
-    {
-        return "Battery: " + std::to_string(_battery) +
-                "\nGold: " + std::to_string(_gold) + 
-                "\nCoordinate: [" + std::to_string(std::get<0>(_coordinate)) + 
-                ", " + std::to_string(std::get<1>(_coordinate)) + "]\n" +
-                "\nh(): " + std::to_string(_heuristic_value) + 
-                "\ng(): " + std::to_string(_g_value)+
-                "\nvalue(): " + std::to_string(_value);
-    }
-
-    bool operator>(const State& state) const;
-    bool operator<(const State& state) const;
-    bool operator==(const State& state) const;
+    /* Operators overload. */
+    bool operator>  (const State& state) const;
+    bool operator<  (const State& state) const;
+    bool operator== (const State& state) const;
 
 private:
-    Room*                   _position   = nullptr;
-    unsigned int            _battery    = 0;
-    unsigned int            _gold       = 0;
-    Action                  _action     = 0;
-    std::list<const Room*>  _mined;
-    Room::Coordinate        _coordinate;
-    double                  _value              = 0;
-    double                  _heuristic_value    = 0;
-    unsigned int            _g_value            = 0;
+    /* Pointer to a room. */
+    Room* _position = nullptr;
+
+    /* Miner's current battery. */
+    unsigned int _battery = 0;
+
+    /* Miner's current gold. */
+    unsigned int _gold = 0;
+
+    /* Action taken by the miner to reach this state. */
+    Action _action = 0;
+
+    /* List with the rooms mined by its ancestors. */
+    std::list<const Room*> _mined;
+
+    /* Tuple with the coordinates of the room. */
+    Room::Coordinate _coordinate;
+
+    /* Sum of h and g, when it is necessary. */
+    double _f = 0;
+
+    /* Heuristic value. */
+    double _h = 0;
+
+    /* Path cost since the first state. */
+    unsigned int _g = 0;
 };
 
 #endif

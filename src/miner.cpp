@@ -157,9 +157,12 @@ void Miner::explore(std::list<State::Action> actions)
 
 int Miner::score() const
 {
-    unsigned int p_dimension = pow(_mine_size,_mine_size);
-    // return 10*_battery + 50*_gold + (factorial(_mine_size)/_explored_rooms) + (p_dimension/_actions_count);
-    return _gold * (_battery+1) + (p_dimension/_actions_count) + (p_dimension/_explored_rooms);// + (p_dimension/_actions_count);
+    unsigned int dimension = pow(_mine_size,_mine_size);
+
+    if (_actions_count && _explored_rooms)
+        return _gold * (_battery+1) + (dimension/_actions_count) + (dimension/_explored_rooms);
+    else
+        return 0;
 }
 
 Miner::Answer Miner::dfs_limited(const unsigned int maxl)
@@ -171,41 +174,36 @@ Miner::Answer Miner::dfs_limited(const unsigned int maxl)
     State state = dfs_limited(0, maxl, _problem.initial_state(), actions, explored);
 
     if (_problem.goal(state))
-    {
         return {true, state, actions};
-    }
 
     return {false, state, actions};
 }
 
+#include <iostream>
 Miner::Answer Miner::A_star()
 {
     State q = _problem.initial_state();
 
-    /* conjunto de nós a serem pesquisados. */
+    /* Node set waiting to be explored. */
     std::list<State> open_set;
     open_set.push_back(q);
 
     std::unordered_map<std::string, bool> closed_set;
     std::map<std::string, State> came_from;
 
-    int counter = 0;
-
     while (!open_set.empty())
     {
-        // a
         State current = open_set.front();
+        // open_set.erase(open_set.begin());
+        open_set.pop_front();
+
+        _explored_rooms++;
 
         if (_problem.goal(current))
             return {true, current, reconstruct_path(came_from, current)};
 
-        _explored_rooms++;
-
-        //b
-        open_set.pop_front();
         closed_set[current.hash()] = true;
 
-        //d
         for (State neighbor : _problem.successors(current))
         {
             if (closed_set[neighbor.hash()])
@@ -213,11 +211,7 @@ Miner::Answer Miner::A_star()
 
             unsigned int tentative_g_score = current.g() + _problem.path_cost();
 
-            if (std::find(open_set.begin(), open_set.end(), neighbor) == open_set.end())
-            {
-                open_set.push_back(neighbor);
-                open_set.sort();
-            }
+            open_set.push_back(neighbor);
 
             if (tentative_g_score > neighbor.g())
                 continue;
@@ -244,8 +238,6 @@ std::list<State::Action> Miner::reconstruct_path(std::map<std::string, State> ca
     return actions;    
 }
 
-
-unsigned int counter = 0;
 State Miner::dfs_limited(const unsigned int curl, const unsigned int maxl, State& state, std::list<State::Action>& actions, std::unordered_map<std::string, bool>& explored)
 {
     _explored_rooms++;

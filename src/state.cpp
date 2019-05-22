@@ -18,16 +18,16 @@ State::State(Room* position, unsigned int battery, unsigned int gold, Action act
     this->_mined = mined;
 }
 
-State::State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double h, double g, double value)
+State::State(Room* position, unsigned int battery, unsigned int gold, const Action action, std::list<const Room*> mined, double h, double g, double f)
 {
     this->_position = position;
     this->_battery = battery;
     this->_gold = gold;
     this->_action = action;
     this->_mined = mined;
-    this->_heuristic_value = h;
-    this->_g_value = g;
-    this->_value = value;
+    this->_h = h;
+    this->_g = g;
+    this->_g = f;
 }
 
 Room* State::position() const
@@ -91,41 +91,43 @@ std::string State::hash() const
     for (const Room* explored : _mined)
         explored_states += std::to_string((long unsigned int) explored);
 
-    return std::to_string((long unsigned int) _position) + 
+    return  std::to_string((long unsigned int) _position) + 
             std::to_string(_battery) +
             std::to_string(_gold) +
-            explored_states + 
-            std::to_string(_heuristic_value) + 
-            std::to_string(_g_value) + 
-            std::to_string(_value);
+            explored_states +
+            std::to_string(_f) +
+            std::to_string(_h) + 
+            std::to_string(_g);
+            
+            
 }
 
 double State::h() const
 {
-    return _heuristic_value;
+    return _h;
 }
 
 bool State::operator>(const State& state) const
 {
-    return _value > state._value;
+    return _f > state._f;
 }
 
 bool State::operator<(const State& state) const
 {
-    return _value < state._value;
+    return _f < state._f;
 }
 
 bool State::operator==(const State& state) const
 {
-    return this->hash() == state.hash();
+    return hash() == state.hash();
 }
 
 double State::g() const
 {
-    return _g_value;
+    return _g;
 }
 
-void State::value(double value)
+void State::f(double f)
 {
-    this->_value = value;
+    this->_f = f;
 }
