@@ -55,53 +55,13 @@ run:
 	@ echo " "
 
 clean:
-	@ $(RM) ./objects/*.o ./bin/* ./test/objects/*.o ./test/bin/* $(PROJ_NAME) *~
+	@ $(RM) ./objects/*.o ./bin/* $(PROJ_NAME) *~
 	@ rmdir --ignore-fail-on-non-empty objects
 	@ rmdir --ignore-fail-on-non-empty bin
-	@ rmdir --ignore-fail-on-non-empty test/objects
-	@ rmdir --ignore-fail-on-non-empty test/bin
-
-########## TESTS ##########
-
-# .cpp test files
-CXX_TEST_SRC=$(wildcard ./test/src/*.cpp)
-
-# Test object files
-OBJ_TEST=$(subst .cpp,.o,$(subst test/src,test/objects,$(CXX_TEST_SRC)))
-
-# .hpp test files
-HPP_TEST_SRC=$(wildcard ./test/include/*.hpp)
-
-# Test object files
-./test/objects/%.o: ./test/src/%.cpp $(H_SRC) $(HPP_TEST_SRC)
-	@ $(CXX) $< $(CXX_FLAGS) -o $@
-
-# Run all tests
-test: create_folders run_tests clean
-
-run_tests: $(OBJ) $(OBJ_TEST) 
-	@ echo "run tests"
-	@ echo "$^"
-	@ $(CXX) $^ -o ./test/bin/test
-	@./test/bin/test
-
-debug: create_folders run_debug clean
-
-run_debug: $(PROJ_NAME)
-	@ gdb app/release/$(PROJ_NAME)
-
-test-debug: create_folders test_debug clean
-
-test_debug: $(OBJ) $(OBJ_TEST) 
-	@ $(CXX) $^ -o ./test/bin/test
-	@ gdb test/bin/test
-	
 
 create_folders:
 	@ mkdir -p bin
 	@ mkdir -p objects
-	@ mkdir -p test/bin
-	@ mkdir -p test/objects
 
 ########## MINE GENERATOR ##########
 
@@ -114,4 +74,4 @@ generate:
 	@ g++ -o generator/generate generator/generator.cpp generator/mine_generator.cpp
 	@ ./generator/generate $(call args,defaultstring)
 
-.PHONY: all clean test
+.PHONY: all clean

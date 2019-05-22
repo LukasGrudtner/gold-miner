@@ -17,16 +17,6 @@ $ make
 $ make run
 ```
 
-### Testing
-```sh
-$ make test
-```
-
-### Debugging tests
-```sh
-$ make debug
-```
-
 ### Generating a mine
 
 ```sh
